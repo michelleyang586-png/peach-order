@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紅鈴水蜜桃訂購</title>
+<script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #fff5f5; color: #333; }
+  .header { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; padding: 20px; text-align: center; }
+  .header h1 { font-size: 20px; font-weight: bold; }
+  .header p { font-size: 13px; margin-top: 4px; opacity: 0.9; }
+  .container { padding: 16px; max-width: 480px; margin: 0 auto; }
+  .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 15px; color: #ff6b6b; margin-bottom: 14px; font-weight: bold; }
+  label { display: block; font-size: 14px; color: #555; margin-bottom: 6px; }
+  input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; }
+  input:focus, select:focus, textarea:focus { border-color: #ff6b6b; }
+  .field { margin-bottom: 16px; }
+  .delivery-toggle { display: flex; gap: 8px; }
+  .delivery-btn { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; font-size: 14px; cursor: pointer; text-align: center; transition: all 0.2s; }
+  .delivery-btn.active { border-color: #ff6b6b; background: #fff0f0; color: #ff6b6b; font-weight: bold; }
+  .spec-card { border: 2px solid #eee; border-radius: 10px; padding: 14px; margin-bottom: 12px; transition: all 0.2s; }
+  .spec-card.has-qty { border-color: #ff6b6b; background: #fff8f8; }
+  .spec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .spec-name { font-size: 15px; font-weight: bold; color: #333; }
+  .spec-price { font-size: 14px; color: #ff6b6b; font-weight: bold; }
+  .qty-control { display: flex; align-items: center; gap: 10px; }
+  .qty-btn { width: 36px; height: 36px; border: 2px solid #ff6b6b; border-radius: 50%; background: white; color: #ff6b6b; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  .qty-num { font-size: 20px; font-weight: bold; min-width: 30px; text-align: center; }
+  .price-display { background: #f9f9f9; border-radius: 8px; padding: 14px; margin-top: 8px; }
+  .price-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; color: #666; }
+  .price-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #ff6b6b; border-top: 1px solid #eee; padding-top: 10px; margin-top: 4px; }
+  .address-section { display: none; }
+  .payment-info { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px; border-radius: 4px; font-size: 13px; color: #666; line-height: 1.6; }
+  .submit-btn { width: 100%; padding: 16px; background: #ff6b6b; color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+  .success-screen { display: none; text-align: center; padding: 40px 20px; }
+  .success-icon { font-size: 60px; margin-bottom: 16px; }
+  .success-title { font-size: 22px; font-weight: bold; color: #ff6b6b; margin-bottom: 8px; }
+  .success-msg { font-size: 14px; color: #666; line-height: 1.6; white-space: pre-line; }
+  .order-id { font-size: 13px; color: #999; margin-top: 12px; }
+  .empty-warning { color: #e33; font-size: 13px; margin-top: 8px; display: none; }
+</style>
+</head>
+<body>
+
+<div id="main-screen">
+  <div class="header">
+    <h1>🍑 餘有榮焉｜紅鈴水蜜桃訂購</h1>
+    <p>季節限定・新鮮直送・北半球最早產</p>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>選擇取貨方式</h2>
+      <div class="delivery-toggle">
+        <button class="delivery-btn active" onclick="setDelivery('自取')" id="btn-pickup">🏪 自取</button>
+        <button class="delivery-btn" onclick="setDelivery('宅配')" id="btn-delivery">❄️ 冷藏宅配</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>選擇規格與數量</h2>
+
+      <div class="spec-card" id="spec-card-0">
+        <div class="spec-header">
+          <span class="spec-name">🍑 大顆 4 粒裝</span>
+          <span class="spec-price">NT$ 200 / 盒</span>
+        </div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(0, -1)">−</button>
+          <span class="qty-num" id="qty-0">0</span>
+          <button class="qty-btn" onclick="changeQty(0, 1)">+</button>
+          <span style="font-size:13px;color:#999;">盒</span>
+        </div>
+      </div>
+
+      <div class="spec-card" id="spec-card-1">
+        <div class="spec-header">
+          <span class="spec-name">🎁 大顆 8 粒禮盒</span>
+          <span class="spec-price">NT$ 450 / 盒</span>
+        </div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(1, -1)">−</button>
+          <span class="qty-num" id="qty-1">0</span>
+          <button class="qty-btn" onclick="changeQty(1, 1)">+</button>
+          <span style="font-size:13px;color:#999;">盒</span>
+        </div>
+      </div>
+
+      <div class="spec-card" id="spec-card-2">
+        <div class="spec-header">
+          <span class="spec-name">🍑 中顆 16 粒裝</span>
+          <span class="spec-price">NT$ 380 / 盒</span>
+        </div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(2, -1)">−</button>
+          <span class="qty-num" id="qty-2">0</span>
+          <button class="qty-btn" onclick="changeQty(2, 1)">+</button>
+          <span style="font-size:13px;color:#999;">盒</span>
+        </div>
+      </div>
+
+      <p class="empty-warning" id="empty-warning">請至少選擇一種規格</p>
+
+      <div class="price-display" style="margin-top:14px;">
+        <div class="price-row" id="row-0" style="display:none;"><span>大顆4粒 x <span id="qty-text-0">0</span> 盒</span><span id="subtotal-0">NT$ 0</span></div>
+        <div class="price-row" id="row-1" style="display:none;"><span>大顆8粒 x <span id="qty-text-1">0</span> 盒</span><span id="subtotal-1">NT$ 0</span></div>
+        <div class="price-row" id="row-2" style="display:none;"><span>中顆16粒 x <span id="qty-text-2">0</span> 盒</span><span id="subtotal-2">NT$ 0</span></div>
+        <div class="price-row" id="shipping-row" style="display:none;"><span>運費</span><span id="shipping-price">NT$ 0</span></div>
+        <div class="price-total"><span>總金額</span><span id="total-price">NT$ 0</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>聯絡資訊</h2>
+      <div class="field">
+        <label>姓名</label>
+        <input type="text" id="name" placeholder="請輸入姓名">
+      </div>
+      <div class="field">
+        <label>電話</label>
+        <input type="tel" id="phone" placeholder="請輸入手機號碼">
+      </div>
+      <div class="field address-section" id="address-section">
+        <label>收件地址</label>
+        <input type="text" id="address" placeholder="請輸入完整收件地址">
+      </div>
+      <div class="field">
+        <label>備註（選填）</label>
+        <textarea id="note" rows="2" placeholder="如有特殊需求請填寫"></textarea>
+      </div>
+    </div>
+
+    <div class="card" id="payment-card" style="display:none;">
+      <h2>付款方式</h2>
+      <div class="payment-info">
+        宅配採冷藏配送，需先完成匯款後才會出貨。<br>
+        下單後請將款項匯至：<br><br>
+        銀行：（你的銀行）<br>
+        帳號：（你的帳號）<br>
+        戶名：（你的戶名）<br><br>
+        匯款後請回傳匯款後五碼至 LINE，確認後即安排冷藏宅配出貨。
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitOrder()">確認送出訂單</button>
+  </div>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">訂單已送出！</div>
+  <div class="success-msg" id="success-msg"></div>
+  <div class="order-id" id="order-id-display"></div>
+</div>
+
+<script>
+const LIFF_ID = '2009767596-jd7WjD99';
+const API_URL = 'https://peach-api.vercel.app/api/order';
+
+const SPECS = [
+  { name: '大顆4粒', price: 200, key: 'spec0' },
+  { name: '大顆8粒禮盒', price: 450, key: 'spec1' },
+  { name: '中顆16粒', price: 380, key: 'spec2' }
+];
+
+let qtys = [0, 0, 0];
+let deliveryType = '自取';
+let lineName = '';
+let lineUserId = '';
+const SHIPPING = 200;
+
+async function init() {
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if (liff.isLoggedIn()) {
+      const profile = await liff.getProfile();
+      lineName = profile.displayName;
+      lineUserId = profile.userId;
+    } else {
+      liff.login();
+    }
+  } catch(e) {}
+  updatePriceDisplay();
+}
+
+function setDelivery(type) {
+  deliveryType = type;
+  document.getElementById('btn-pickup').className = 'delivery-btn' + (type === '自取' ? ' active' : '');
+  document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
+  document.getElementById('address-section').style.display = type === '宅配' ? 'block' : 'none';
+  document.getElementById('payment-card').style.display = type === '宅配' ? 'block' : 'none';
+  updatePriceDisplay();
+}
+
+function changeQty(idx, delta) {
+  qtys[idx] = Math.max(0, qtys[idx] + delta);
+  document.getElementById('qty-' + idx).textContent = qtys[idx];
+  document.getElementById('spec-card-' + idx).className = 'spec-card' + (qtys[idx] > 0 ? ' has-qty' : '');
+  updatePriceDisplay();
+}
+
+function calcShipping() {
+  if (deliveryType !== '宅配') return 0;
+  const totalBoxes = qtys.reduce((a, b) => a + b, 0);
+  if (totalBoxes === 0) return 0;
+  return SHIPPING;
+}
+
+function updatePriceDisplay() {
+  let subtotal = 0;
+  for (let i = 0; i < 3; i++) {
+    const s = qtys[i] * SPECS[i].price;
+    subtotal += s;
+    document.getElementById('qty-text-' + i).textContent = qtys[i];
+    document.getElementById('subtotal-' + i).textContent = 'NT$ ' + s.toLocaleString();
+    document.getElementById('row-' + i).style.display = qtys[i] > 0 ? 'flex' : 'none';
+  }
+  const shipping = calcShipping();
+  const total = subtotal + shipping;
+  const shippingRow = document.getElementById('shipping-row');
+  if (deliveryType === '宅配' && subtotal > 0) {
+    shippingRow.style.display = 'flex';
+    document.getElementById('shipping-price').textContent = 'NT$ ' + shipping;
+  } else {
+    shippingRow.style.display = 'none';
+  }
+  document.getElementById('total-price').textContent = 'NT$ ' + total.toLocaleString();
+}
+
+async function submitOrder() {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const note = document.getElementById('note').value.trim();
+
+  const totalBoxes = qtys.reduce((a, b) => a + b, 0);
+  if (totalBoxes === 0) {
+    document.getElementById('empty-warning').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty-warning').style.display = 'none';
+  if (!name || !phone) { alert('請填寫姓名和電話'); return; }
+  if (deliveryType === '宅配' && !address) { alert('宅配需填寫收件地址'); return; }
+
+  const shipping = calcShipping();
+  let subtotal = 0;
+  for (let i = 0; i < 3; i++) subtotal += qtys[i] * SPECS[i].price;
+  const totalAmount = subtotal + shipping;
+
+  const specSummary = SPECS
+    .map((s, i) => qtys[i] > 0 ? s.name + ' x' + qtys[i] : null)
+    .filter(Boolean).join('、');
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送出中...';
+
+  try {
+    const params = new URLSearchParams({
+      action: 'order',
+      lineName: lineName || name,
+      recipientName: name,
+      lineUserId: lineUserId || '',
+      phone,
+      deliveryType,
+      spec0: String(qtys[0]),
+      spec1: String(qtys[1]),
+      spec2: String(qtys[2]),
+      specSummary,
+      amount: String(totalAmount),
+      address: address || '自取',
+      note: note || ''
+    });
+
+    const res = await fetch(API_URL + '?' + params.toString());
+    const result = await res.json();
+
+    if (result.status === 'success') {
+      document.getElementById('main-screen').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      const msg = deliveryType === '宅配'
+        ? '感謝您的訂購！\n\n規格：' + specSummary + '\n運費：NT$ ' + shipping + '\n總計：NT$ ' + totalAmount.toLocaleString() + '\n\n請匯款至指定帳戶，並回傳匯款後五碼，確認後即安排冷藏宅配出貨。'
+        : '感謝您的訂購！\n\n規格：' + specSummary + '\n總計：NT$ ' + totalAmount.toLocaleString() + '\n\n取貨時付款，我們會盡快與您聯繫取貨時間。';
+      document.getElementById('success-msg').textContent = msg;
+      document.getElementById('order-id-display').textContent = '訂單編號：' + result.orderId;
+    } else {
+      throw new Error('失敗');
+    }
+  } catch(e) {
+    alert('送出失敗，請稍後再試');
+    btn.disabled = false;
+    btn.textContent = '確認送出訂單';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
