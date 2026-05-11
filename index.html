@@ -271,128 +271,197 @@ textarea {
 
     <div class="card">
 
-      <h2>挑選規格</h2>
+     <h2>挑選規格</h2>
 
-      <!-- 特2顆 -->
-      <div class="spec-card pickup-only" id="spec-card-0">
+<!-- 特2顆 -->
+<div class="spec-card pickup-only" id="spec-card-0">
 
-       <div class="spec-header">
+  <div class="spec-header">
 
-        <div class="spec-info">
-          <div class="spec-name">🍑 特2顆（自取限定）</div>
-          <div class="spec-price">NT$ 150 / 盒</div>
-        </div>
+    <div class="spec-info">
+      <div class="spec-name">🍑 特2顆（自取限定）</div>
+      <div class="spec-price">NT$ 150 / 盒</div>
+    </div>
 
-        <div class="qty-control">
-  
-        <button class="qty-btn"
-          onclick="changeQty(0,-1)">
-          −
-        </button>
+    <div class="qty-control">
 
-        <input
-           type="number"
-            class="qty-input"
-            id="qty-0"
-            value="0"
-            min="0"
-            onchange="manualQty(0,this.value)"
-          >
+      <button class="qty-btn"
+        onclick="changeQty(0,-1)">
+        −
+      </button>
 
-          <button class="qty-btn"
-            onclick="changeQty(0,1)">
-            +
-          </button>
+      <input
+        type="number"
+        class="qty-input"
+        id="qty-0"
+        value="0"
+        min="0"
+        onchange="manualQty(0,this.value)"
+      >
 
-</div>
-
-</div>
-
-      <!-- 特4顆 -->
-      <div class="spec-card pickup-only" id="spec-card-1">
-
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">🍑 特4顆（自取限定）</div>
-            <div class="spec-price">NT$ 200 / 盒</div>
-          </div>
-
-          <div class="qty-control">
-
-          <button class="qty-btn"
-          onclick="changeQty(0,-1)">
-    −
-        </button>
-
-        <span class="qty-num" id="qty-0">0</span>
-
-        <button class="qty-btn"
-         onclick="changeQty(0,1)">
-          +
-        </button>
-
-      </div>
-
-      <!-- 大6 -->
-      <div class="spec-card" id="spec-card-2">
-
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">🎁 禮盒大6顆</div>
-            <div class="spec-price">NT$ 500 / 盒</div>
-          </div>
-
-          <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty(2,-1)">−</button>
-            <span class="qty-num" id="qty-2">0</span>
-            <button class="qty-btn" onclick="changeQty(2,1)">+</button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 大8 -->
-      <div class="spec-card" id="spec-card-3">
-
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">🎁 禮盒大8顆</div>
-            <div class="spec-price">NT$ 450 / 盒</div>
-          </div>
-
-          <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty(3,-1)">−</button>
-            <span class="qty-num" id="qty-3">0</span>
-            <button class="qty-btn" onclick="changeQty(3,1)">+</button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 中16 -->
-      <div class="spec-card" id="spec-card-4">
-
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">🍑 家庭盒中16顆</div>
-            <div class="spec-price">NT$ 400 / 盒</div>
-          </div>
-
-          <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty(4,-1)">−</button>
-            <span class="qty-num" id="qty-4">0</span>
-            <button class="qty-btn" onclick="changeQty(4,1)">+</button>
-          </div>
-        </div>
-
-      </div>
-
-      <p id="empty-warning"
-        style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
-        別忘了選購好吃的水蜜桃喔！
-      </p>
+      <button class="qty-btn"
+        onclick="changeQty(0,1)">
+        +
+      </button>
 
     </div>
+
+  </div>
+
+</div>
+
+<!-- 特4顆 -->
+<div class="spec-card pickup-only" id="spec-card-1">
+
+  <div class="spec-header">
+
+    <div class="spec-info">
+      <div class="spec-name">🍑 特4顆（自取限定）</div>
+      <div class="spec-price">NT$ 200 / 盒</div>
+    </div>
+
+    <div class="qty-control">
+
+      <button class="qty-btn"
+        onclick="changeQty(1,-1)">
+        −
+      </button>
+
+      <input
+        type="number"
+        class="qty-input"
+        id="qty-1"
+        value="0"
+        min="0"
+        onchange="manualQty(1,this.value)"
+      >
+
+      <button class="qty-btn"
+        onclick="changeQty(1,1)">
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 禮盒大6顆 -->
+<div class="spec-card" id="spec-card-2">
+
+  <div class="spec-header">
+
+    <div class="spec-info">
+      <div class="spec-name">🎁 禮盒大6顆</div>
+      <div class="spec-price">NT$ 500 / 盒</div>
+    </div>
+
+    <div class="qty-control">
+
+      <button class="qty-btn"
+        onclick="changeQty(2,-1)">
+        −
+      </button>
+
+      <input
+        type="number"
+        class="qty-input"
+        id="qty-2"
+        value="0"
+        min="0"
+        onchange="manualQty(2,this.value)"
+      >
+
+      <button class="qty-btn"
+        onclick="changeQty(2,1)">
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 禮盒大8顆 -->
+<div class="spec-card" id="spec-card-3">
+
+  <div class="spec-header">
+
+    <div class="spec-info">
+      <div class="spec-name">🎁 禮盒大8顆</div>
+      <div class="spec-price">NT$ 450 / 盒</div>
+    </div>
+
+    <div class="qty-control">
+
+      <button class="qty-btn"
+        onclick="changeQty(3,-1)">
+        −
+      </button>
+
+      <input
+        type="number"
+        class="qty-input"
+        id="qty-3"
+        value="0"
+        min="0"
+        onchange="manualQty(3,this.value)"
+      >
+
+      <button class="qty-btn"
+        onclick="changeQty(3,1)">
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 家庭盒中16顆 -->
+<div class="spec-card" id="spec-card-4">
+
+  <div class="spec-header">
+
+    <div class="spec-info">
+      <div class="spec-name">🍑 家庭盒中16顆</div>
+      <div class="spec-price">NT$ 400 / 盒</div>
+    </div>
+
+    <div class="qty-control">
+
+      <button class="qty-btn"
+        onclick="changeQty(4,-1)">
+        −
+      </button>
+
+      <input
+        type="number"
+        class="qty-input"
+        id="qty-4"
+        value="0"
+        min="0"
+        onchange="manualQty(4,this.value)"
+      >
+
+      <button class="qty-btn"
+        onclick="changeQty(4,1)">
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<p id="empty-warning"
+  style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
+  別忘了選購好吃的水蜜桃喔！
+</p>
 
     <div class="card">
 
