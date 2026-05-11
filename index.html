@@ -681,6 +681,35 @@ async function submitOrder() {
 init();
 
 </script>
+  <script>
+
+function manualQty(idx,value){
+
+  qtys[idx] = Math.max(
+    0,
+    parseInt(value) || 0
+  );
+
+  document.getElementById(
+    'qty-' + idx
+  ).value = qtys[idx];
+
+  document.getElementById(
+    'spec-card-' + idx
+  ).className =
+    'spec-card' +
+    (SPECS[idx].pickupOnly
+      ? ' pickup-only'
+      : '') +
+    (qtys[idx] > 0
+      ? ' has-qty'
+      : '');
+
+  updatePriceDisplay();
+
+}
+
+</script>
 
 </body>
 </html>
