@@ -110,55 +110,49 @@ body {
 
 .spec-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.spec-name {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.spec-price {
-  font-size: 15px;
-  color: var(--peach-main);
-  font-weight: 700;
+.spec-info {
+  width: 100%;
 }
 
 .qty-control {
   display: flex;
   align-items: center;
-  gap: 15px;
-}
-
-.qty-control {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 12px;
+  width: 100%;
 }
 
 .qty-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
   border: none;
   background: white;
   color: var(--peach-main);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .qty-btn:active {
   transform: scale(0.95);
 }
 
-.qty-num {
-  font-size: 22px;
-  font-weight: bold;
-  min-width: 30px;
+.qty-input {
+  width: 90px;
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid #EEE;
+  background: #FFF;
   text-align: center;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .field label {
@@ -278,27 +272,37 @@ textarea {
       <!-- 特2顆 -->
       <div class="spec-card pickup-only" id="spec-card-0">
 
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">🍑 特2顆（自取限定）</div>
-            <div class="spec-price">NT$ 150 / 盒</div>
-          </div>
+       <div class="spec-header">
 
-          <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty(0,-1)">−</button>
-            <input
-              type="number"
-              class="qty-input"
-              id="qty-0"
-              value="0"
-              min="0"
-              onchange="manualQty(0,this.value)"
-            >
-            <button class="qty-btn" onclick="changeQty(0,1)">+</button>
-          </div>
+        <div class="spec-info">
+          <div class="spec-name">🍑 特2顆（自取限定）</div>
+          <div class="spec-price">NT$ 150 / 盒</div>
         </div>
 
-      </div>
+        <div class="qty-control">
+  
+        <button class="qty-btn"
+        onclick="changeQty(0,-1)">
+      −
+    </button>
+
+    <input
+      type="number"
+      class="qty-input"
+      id="qty-0"
+      value="0"
+      min="0"
+      onchange="manualQty(0,this.value)"
+    >
+
+    <button class="qty-btn"
+      onclick="changeQty(0,1)">
+      +
+    </button>
+
+  </div>
+
+</div>
 
       <!-- 特4顆 -->
       <div class="spec-card pickup-only" id="spec-card-1">
