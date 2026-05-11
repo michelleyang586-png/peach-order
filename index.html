@@ -506,6 +506,7 @@ function updateSpecVisibility() {
 
   });
 
+  // 切換成宅配
   if (deliveryType === '宅配') {
 
     qtys[0] = 0;
@@ -513,6 +514,34 @@ function updateSpecVisibility() {
 
     document.getElementById('qty-0').textContent = 0;
     document.getElementById('qty-1').textContent = 0;
+
+    document.getElementById('spec-card-0')
+      .classList.remove('has-qty');
+
+    document.getElementById('spec-card-1')
+      .classList.remove('has-qty');
+
+  }
+
+  // 切換成自取
+  if (deliveryType === '自取') {
+
+    qtys[2] = 0;
+    qtys[3] = 0;
+    qtys[4] = 0;
+
+    document.getElementById('qty-2').textContent = 0;
+    document.getElementById('qty-3').textContent = 0;
+    document.getElementById('qty-4').textContent = 0;
+
+    document.getElementById('spec-card-2')
+      .classList.remove('has-qty');
+
+    document.getElementById('spec-card-3')
+      .classList.remove('has-qty');
+
+    document.getElementById('spec-card-4')
+      .classList.remove('has-qty');
 
   }
 
@@ -740,4 +769,3 @@ init();
 
 </body>
 </html>
-```
