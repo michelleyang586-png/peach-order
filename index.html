@@ -1,52 +1,219 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>餘有榮焉｜水蜜桃訂購</title>
 
 <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
 <style>
 
-.qty-control{
-  display:flex;
-  align-items:center;
-  gap:12px;
+:root {
+  --peach-main: #FF8A8A;
+  --peach-light: #FFF0F0;
+  --leaf-green: #7BB342;
+  --gold: #D4A373;
+  --bg-color: #FAFAFA;
 }
 
-.qty-btn{
-  width:48px;
-  height:48px;
-  border:none;
-  border-radius:14px;
-  background:#FFF;
-  color:var(--peach-main);
-  font-size:28px;
-  font-weight:bold;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12);
-  cursor:pointer;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.qty-btn:active{
-  transform:scale(0.95);
+body {
+  font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg-color);
+  color: #444;
+  line-height: 1.5;
 }
 
-.qty-input{
-  width:72px;
-  height:48px;
-  border:1px solid #EEE;
-  border-radius:14px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-  background:#FFF;
+.header {
+  background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 4px 15px rgba(255, 138, 138, 0.3);
 }
 
-.qty-input::-webkit-inner-spin-button,
-.qty-input::-webkit-outer-spin-button{
-  -webkit-appearance:none;
-  margin:0;
+.header h1 {
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.header p {
+  font-size: 14px;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+.container {
+  padding: 20px 16px;
+  max-width: 500px;
+  margin: -20px auto 0;
+}
+
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(149,157,165,0.1);
+}
+
+.card h2 {
+  font-size: 16px;
+  color: var(--peach-main);
+  margin-bottom: 16px;
+}
+
+.delivery-toggle {
+  display: flex;
+  gap: 10px;
+  background: #F0F0F0;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.delivery-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  color: #777;
+}
+
+.delivery-btn.active {
+  background: white;
+  color: var(--peach-main);
+  font-weight: bold;
+}
+
+.spec-card {
+  border: 1px solid #EEE;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: 0.3s;
+}
+
+.spec-card.has-qty {
+  border-color: var(--peach-main);
+  background: var(--peach-light);
+}
+
+.spec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spec-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.spec-price {
+  font-size: 15px;
+  color: var(--peach-main);
+  font-weight: 700;
+}
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: var(--peach-main);
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.qty-num {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 24px;
+  text-align: center;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 8px;
+  display: block;
+}
+
+input,
+textarea {
+  background: #F9F9F9;
+  border: 1px solid #EDEDED;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  width: 100%;
+}
+
+.price-display {
+  background: #333;
+  color: #EEE;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  background: var(--peach-main);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 20px 0 40px;
+  cursor: pointer;
+}
+
+.peach-down {
+  display: inline-block;
+  transform: rotate(180deg);
 }
 
 </style>
@@ -57,7 +224,7 @@
 <div id="main-screen">
 
   <div class="header">
-<h1>餘有榮焉 <span class="peach-down">🍑</span> 紅鈴水蜜桃</h1>
+    <h1>餘有榮焉 <span class="peach-down">🍑</span> 紅鈴水蜜桃</h1>
     <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
 
@@ -68,258 +235,142 @@
       <h2>取貨方式</h2>
 
       <div class="delivery-toggle">
-        <button class="delivery-btn active"
+
+        <button
+          class="delivery-btn active"
           onclick="setDelivery('自取')"
           id="btn-pickup">
+
           🏪 現場自取
+
         </button>
 
-        <button class="delivery-btn"
+        <button
+          class="delivery-btn"
           onclick="setDelivery('宅配')"
           id="btn-delivery">
+
           ❄️ 黑貓冷藏宅配
+
         </button>
+
       </div>
 
     </div>
 
     <div class="card">
 
-  <h2>挑選規格</h2>
+      <h2>挑選規格</h2>
 
-  <!-- 特2顆 -->
-  <div class="spec-card pickup-only" id="spec-card-0">
+      <!-- 特2顆 -->
+      <div class="spec-card pickup-only" id="spec-card-0">
 
-    <div class="spec-header">
+        <div class="spec-header">
 
-      <div>
-        <div class="spec-name">
-          🍑 特2顆（自取限定）
+          <div>
+            <div class="spec-name">🍑 特2顆（自取限定）</div>
+            <div class="spec-price">NT$ 150 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(0,-1)">−</button>
+            <span class="qty-num" id="qty-0">0</span>
+            <button class="qty-btn" onclick="changeQty(0,1)">+</button>
+          </div>
+
         </div>
 
-        <div class="spec-price">
-          NT$ 150 / 盒
+      </div>
+
+      <!-- 特4顆 -->
+      <div class="spec-card pickup-only" id="spec-card-1">
+
+        <div class="spec-header">
+
+          <div>
+            <div class="spec-name">🍑 特4顆（自取限定）</div>
+            <div class="spec-price">NT$ 200 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(1,-1)">−</button>
+            <span class="qty-num" id="qty-1">0</span>
+            <button class="qty-btn" onclick="changeQty(1,1)">+</button>
+          </div>
+
         </div>
-      </div>
-
-      <div class="qty-control">
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(0,-1)">
-          −
-        </button>
-
-        <input
-          type="number"
-          class="qty-input"
-          id="qty-0"
-          value="0"
-          min="0"
-          onchange="manualQty(0,this.value)"
-        >
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(0,1)">
-          +
-        </button>
 
       </div>
+
+      <!-- 大6 -->
+      <div class="spec-card" id="spec-card-2">
+
+        <div class="spec-header">
+
+          <div>
+            <div class="spec-name">🎁 禮盒大6顆</div>
+            <div class="spec-price">NT$ 500 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(2,-1)">−</button>
+            <span class="qty-num" id="qty-2">0</span>
+            <button class="qty-btn" onclick="changeQty(2,1)">+</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 大8 -->
+      <div class="spec-card" id="spec-card-3">
+
+        <div class="spec-header">
+
+          <div>
+            <div class="spec-name">🎁 禮盒大8顆</div>
+            <div class="spec-price">NT$ 450 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(3,-1)">−</button>
+            <span class="qty-num" id="qty-3">0</span>
+            <button class="qty-btn" onclick="changeQty(3,1)">+</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 中16 -->
+      <div class="spec-card" id="spec-card-4">
+
+        <div class="spec-header">
+
+          <div>
+            <div class="spec-name">🍑 家庭盒中16顆</div>
+            <div class="spec-price">NT$ 400 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(4,-1)">−</button>
+            <span class="qty-num" id="qty-4">0</span>
+            <button class="qty-btn" onclick="changeQty(4,1)">+</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <p
+        id="empty-warning"
+        style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
+
+        別忘了選購好吃的水蜜桃喔！
+
+      </p>
 
     </div>
-
-  </div>
-
-  <!-- 特4顆 -->
-  <div class="spec-card pickup-only" id="spec-card-1">
-
-    <div class="spec-header">
-
-      <div>
-        <div class="spec-name">
-          🍑 特4顆（自取限定）
-        </div>
-
-        <div class="spec-price">
-          NT$ 200 / 盒
-        </div>
-      </div>
-
-      <div class="qty-control">
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(1,-1)">
-          −
-        </button>
-
-        <input
-          type="number"
-          class="qty-input"
-          id="qty-1"
-          value="0"
-          min="0"
-          onchange="manualQty(1,this.value)"
-        >
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(1,1)">
-          +
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- 大6 -->
-  <div class="spec-card" id="spec-card-2">
-
-    <div class="spec-header">
-
-      <div>
-        <div class="spec-name">
-          🎁 禮盒大6顆
-        </div>
-
-        <div class="spec-price">
-          NT$ 500 / 盒
-        </div>
-      </div>
-
-      <div class="qty-control">
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(2,-1)">
-          −
-        </button>
-
-        <input
-          type="number"
-          class="qty-input"
-          id="qty-2"
-          value="0"
-          min="0"
-          onchange="manualQty(2,this.value)"
-        >
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(2,1)">
-          +
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- 大8 -->
-  <div class="spec-card" id="spec-card-3">
-
-    <div class="spec-header">
-
-      <div>
-        <div class="spec-name">
-          🎁 禮盒大8顆
-        </div>
-
-        <div class="spec-price">
-          NT$ 450 / 盒
-        </div>
-      </div>
-
-      <div class="qty-control">
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(3,-1)">
-          −
-        </button>
-
-        <input
-          type="number"
-          class="qty-input"
-          id="qty-3"
-          value="0"
-          min="0"
-          onchange="manualQty(3,this.value)"
-        >
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(3,1)">
-          +
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- 中16 -->
-  <div class="spec-card" id="spec-card-4">
-
-    <div class="spec-header">
-
-      <div>
-        <div class="spec-name">
-          🍑 家庭盒中16顆
-        </div>
-
-        <div class="spec-price">
-          NT$ 400 / 盒
-        </div>
-      </div>
-
-      <div class="qty-control">
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(4,-1)">
-          −
-        </button>
-
-        <input
-          type="number"
-          class="qty-input"
-          id="qty-4"
-          value="0"
-          min="0"
-          onchange="manualQty(4,this.value)"
-        >
-
-        <button
-          class="qty-btn"
-          onclick="changeQty(4,1)">
-          +
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <p
-    id="empty-warning"
-    style="
-      color:#ff6b6b;
-      font-size:13px;
-      text-align:center;
-      display:none;
-    "
-  >
-    別忘了選購好吃的水蜜桃喔！
-  </p>
-
-</div>
 
     <div class="card">
 
@@ -335,12 +386,17 @@
         <input type="tel" id="phone" placeholder="09XX-XXX-XXX">
       </div>
 
-      <div class="field address-section"
+      <div
+        class="field address-section"
         id="address-section"
         style="margin-bottom:15px;display:none;">
 
         <label>宅配地址</label>
-        <input type="text" id="address" placeholder="完整收件地址">
+
+        <input
+          type="text"
+          id="address"
+          placeholder="完整收件地址">
 
       </div>
 
@@ -353,7 +409,8 @@
 
     <div class="price-display" id="price-display"></div>
 
-    <button class="submit-btn"
+    <button
+      class="submit-btn"
       id="submit-btn"
       onclick="submitOrder()">
 
@@ -374,11 +431,11 @@ const API_URL =
 
 const SPECS = [
 
-  { name:'特2顆', price:150, key:'spec0', pickupOnly:true },
-  { name:'特4顆', price:200, key:'spec1', pickupOnly:true },
-  { name:'禮盒大6顆', price:500, key:'spec2' },
-  { name:'禮盒大8顆', price:450, key:'spec3' },
-  { name:'家庭盒中16顆', price:400, key:'spec4' }
+  { name:'特2顆', price:150, pickupOnly:true },
+  { name:'特4顆', price:200, pickupOnly:true },
+  { name:'禮盒大6顆', price:500 },
+  { name:'禮盒大8顆', price:450 },
+  { name:'家庭盒中16顆', price:400 }
 
 ];
 
@@ -431,7 +488,6 @@ function setDelivery(type) {
     type === '宅配' ? 'block' : 'none';
 
   updateSpecVisibility();
-
   updatePriceDisplay();
 
 }
@@ -681,35 +737,7 @@ async function submitOrder() {
 init();
 
 </script>
-  <script>
-
-function manualQty(idx,value){
-
-  qtys[idx] = Math.max(
-    0,
-    parseInt(value) || 0
-  );
-
-  document.getElementById(
-    'qty-' + idx
-  ).value = qtys[idx];
-
-  document.getElementById(
-    'spec-card-' + idx
-  ).className =
-    'spec-card' +
-    (SPECS[idx].pickupOnly
-      ? ' pickup-only'
-      : '') +
-    (qtys[idx] > 0
-      ? ' has-qty'
-      : '');
-
-  updatePriceDisplay();
-
-}
-
-</script>
 
 </body>
 </html>
+```
