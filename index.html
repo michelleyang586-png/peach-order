@@ -286,25 +286,25 @@ textarea {
         <div class="qty-control">
   
         <button class="qty-btn"
-        onclick="changeQty(0,-1)">
-      −
-    </button>
+          onclick="changeQty(0,-1)">
+          −
+        </button>
 
-    <input
-      type="number"
-      class="qty-input"
-      id="qty-0"
-      value="0"
-      min="0"
-      onchange="manualQty(0,this.value)"
-    >
+        <input
+           type="number"
+            class="qty-input"
+            id="qty-0"
+            value="0"
+            min="0"
+            onchange="manualQty(0,this.value)"
+          >
 
-    <button class="qty-btn"
-      onclick="changeQty(0,1)">
-      +
-    </button>
+          <button class="qty-btn"
+            onclick="changeQty(0,1)">
+            +
+          </button>
 
-  </div>
+</div>
 
 </div>
 
@@ -318,11 +318,18 @@ textarea {
           </div>
 
           <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty(1,-1)">−</button>
-            <span class="qty-num" id="qty-1">0</span>
-            <button class="qty-btn" onclick="changeQty(1,1)">+</button>
-          </div>
-        </div>
+
+          <button class="qty-btn"
+          onclick="changeQty(0,-1)">
+    −
+        </button>
+
+        <span class="qty-num" id="qty-0">0</span>
+
+        <button class="qty-btn"
+         onclick="changeQty(0,1)">
+          +
+        </button>
 
       </div>
 
