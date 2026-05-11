@@ -1,320 +1,402 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>餘有榮焉｜水蜜桃訂購</title>
 
 <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
 <style>
-
 :root {
   --peach-main: #FF8A8A;
   --peach-light: #FFF0F0;
+  --leaf-green: #7BB342;
+  --gold: #D4A373;
   --bg-color: #FAFAFA;
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-body{
-  font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
-  background:var(--bg-color);
-  color:#444;
-  line-height:1.5;
+body {
+  font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg-color);
+  color: #444;
+  line-height: 1.5;
 }
 
-.header{
-  background:linear-gradient(145deg,#FF9A9E 0%,#FAD0C4 100%);
-  color:white;
-  padding:40px 20px;
-  text-align:center;
-  border-radius:0 0 30px 30px;
+.header {
+  background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 4px 15px rgba(255, 138, 138, 0.3);
 }
 
-.header h1{
-  font-size:24px;
+.header h1 {
+  font-size: 24px;
+  letter-spacing: 1px;
 }
 
-.header p{
-  font-size:14px;
-  margin-top:8px;
+.header p {
+  font-size: 14px;
+  margin-top: 8px;
+  opacity: 0.9;
 }
 
-.container{
-  padding:20px 16px;
-  max-width:500px;
-  margin:-20px auto 0;
+.container {
+  padding: 20px 16px;
+  max-width: 500px;
+  margin: -20px auto 0;
 }
 
-.card{
-  background:white;
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 8px 24px rgba(149,157,165,0.1);
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(149,157,165,0.1);
 }
 
-.card h2{
-  font-size:16px;
-  color:var(--peach-main);
-  margin-bottom:16px;
+.card h2 {
+  font-size: 16px;
+  color: var(--peach-main);
+  margin-bottom: 16px;
 }
 
-.delivery-toggle{
-  display:flex;
-  gap:10px;
-  background:#F0F0F0;
-  padding:4px;
-  border-radius:12px;
+.delivery-toggle {
+  display: flex;
+  gap: 10px;
+  background: #F0F0F0;
+  padding: 4px;
+  border-radius: 12px;
 }
 
-.delivery-btn{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:transparent;
-  font-size:14px;
-  cursor:pointer;
-  color:#777;
+.delivery-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  color: #777;
 }
 
-.delivery-btn.active{
-  background:white;
-  color:var(--peach-main);
-  font-weight:bold;
+.delivery-btn.active {
+  background: white;
+  color: var(--peach-main);
+  font-weight: bold;
 }
 
-.spec-card{
-  border:1px solid #EEE;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:12px;
-  transition:0.3s;
+.spec-card {
+  border: 1px solid #EEE;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: 0.3s;
 }
 
-.spec-card.has-qty{
-  border-color:var(--peach-main);
-  background:var(--peach-light);
+.spec-card.has-qty {
+  border-color: var(--peach-main);
+  background: var(--peach-light);
 }
 
-.spec-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.spec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.spec-name{
-  font-size:16px;
-  font-weight:600;
+.spec-name {
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.spec-price{
-  font-size:15px;
-  color:var(--peach-main);
-  font-weight:700;
+.spec-price {
+  font-size: 15px;
+  color: var(--peach-main);
+  font-weight: 700;
 }
 
-.qty-control{
-  display:flex;
-  align-items:center;
-  gap:15px;
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.qty-btn{
-  width:32px;
-  height:32px;
-  border-radius:10px;
-  border:none;
-  background:white;
-  color:var(--peach-main);
-  font-size:18px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  cursor:pointer;
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: var(--peach-main);
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.qty-num{
-  font-size:18px;
-  font-weight:bold;
-  min-width:24px;
-  text-align:center;
+.qty-num {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 24px;
+  text-align: center;
 }
 
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  font-size:13px;
-  font-weight:600;
-  color:#888;
-  margin-bottom:8px;
-  display:block;
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 8px;
+  display: block;
 }
 
 input,
-textarea{
-  background:#F9F9F9;
-  border:1px solid #EDEDED;
-  padding:14px;
-  border-radius:12px;
-  font-size:15px;
-  width:100%;
+textarea {
+  background: #F9F9F9;
+  border: 1px solid #EDEDED;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  width: 100%;
 }
 
-.price-display{
-  background:#333;
-  color:#EEE;
-  border-radius:16px;
-  padding:20px;
-  margin-top:10px;
+.price-display {
+  background: #333;
+  color: #EEE;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 10px;
 }
 
-.price-row{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  margin-bottom:8px;
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
-.price-total{
-  display:flex;
-  justify-content:space-between;
-  font-size:20px;
-  font-weight:bold;
-  color:white;
-  border-top:1px solid rgba(255,255,255,0.1);
-  padding-top:12px;
-  margin-top:8px;
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 12px;
+  margin-top: 8px;
 }
 
-.submit-btn{
-  width:100%;
-  padding:18px;
-  background:var(--peach-main);
-  color:white;
-  border:none;
-  border-radius:18px;
-  font-size:17px;
-  font-weight:bold;
-  margin:20px 0 40px;
-  cursor:pointer;
+.payment-info {
+  background: #FFF9EB;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6D5D39;
 }
 
-.peach-down{
-  display:inline-block;
-  transform:rotate(180deg);
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  background: var(--peach-main);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 20px 0 40px;
 }
 
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 24px;
+  background: white;
+  height: 100vh;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>餘有榮焉 🍑 紅鈴水蜜桃</h1>
-  <p>果園產地直送 ‧ 享受清甜滋味</p>
-</div>
+<div id="main-screen">
 
-<div class="container">
-
-  <div class="card">
-
-    <h2>取貨方式</h2>
-
-    <div class="delivery-toggle">
-
-      <button
-        class="delivery-btn active"
-        id="btn-pickup"
-        onclick="setDelivery('自取')">
-
-        🏪 現場自取
-
-      </button>
-
-      <button
-        class="delivery-btn"
-        id="btn-delivery"
-        onclick="setDelivery('宅配')">
-
-        ❄️ 黑貓冷藏宅配
-
-      </button>
-
-    </div>
-
+  <div class="header">
+    <h1>餘有榮焉 🍑 紅鈴水蜜桃</h1>
+    <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
 
-  <div class="card">
+  <div class="container">
 
-    <h2>挑選規格</h2>
+    <div class="card">
 
-    <div id="spec-list"></div>
+      <h2>取貨方式</h2>
 
-    <p
-      id="empty-warning"
-      style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
+      <div class="delivery-toggle">
+        <button class="delivery-btn active"
+          onclick="setDelivery('自取')"
+          id="btn-pickup">
+          🏪 現場自取
+        </button>
 
-      別忘了選購好吃的水蜜桃喔！
+        <button class="delivery-btn"
+          onclick="setDelivery('宅配')"
+          id="btn-delivery">
+          ❄️ 冷藏宅配
+        </button>
+      </div>
 
-    </p>
+    </div>
+
+    <div class="card">
+
+      <h2>挑選規格</h2>
+
+      <!-- 特2顆 -->
+      <div class="spec-card pickup-only" id="spec-card-0">
+
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">🍑 特2顆（自取限定）</div>
+            <div class="spec-price">NT$ 150 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(0,-1)">−</button>
+            <span class="qty-num" id="qty-0">0</span>
+            <button class="qty-btn" onclick="changeQty(0,1)">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 特4顆 -->
+      <div class="spec-card pickup-only" id="spec-card-1">
+
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">🍑 特4顆（自取限定）</div>
+            <div class="spec-price">NT$ 200 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(1,-1)">−</button>
+            <span class="qty-num" id="qty-1">0</span>
+            <button class="qty-btn" onclick="changeQty(1,1)">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 大6 -->
+      <div class="spec-card" id="spec-card-2">
+
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">🎁 禮盒大6顆</div>
+            <div class="spec-price">NT$ 500 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(2,-1)">−</button>
+            <span class="qty-num" id="qty-2">0</span>
+            <button class="qty-btn" onclick="changeQty(2,1)">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 大8 -->
+      <div class="spec-card" id="spec-card-3">
+
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">🎁 禮盒大8顆</div>
+            <div class="spec-price">NT$ 450 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(3,-1)">−</button>
+            <span class="qty-num" id="qty-3">0</span>
+            <button class="qty-btn" onclick="changeQty(3,1)">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 中16 -->
+      <div class="spec-card" id="spec-card-4">
+
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">🍑 家庭盒中16顆</div>
+            <div class="spec-price">NT$ 400 / 盒</div>
+          </div>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(4,-1)">−</button>
+            <span class="qty-num" id="qty-4">0</span>
+            <button class="qty-btn" onclick="changeQty(4,1)">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <p id="empty-warning"
+        style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
+        別忘了選購好吃的水蜜桃喔！
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <h2>收件資訊</h2>
+
+      <div class="field" style="margin-bottom:15px;">
+        <label>聯絡姓名</label>
+        <input type="text" id="name" placeholder="請填寫姓名">
+      </div>
+
+      <div class="field" style="margin-bottom:15px;">
+        <label>手機號碼</label>
+        <input type="tel" id="phone" placeholder="09XX-XXX-XXX">
+      </div>
+
+      <div class="field address-section"
+        id="address-section"
+        style="margin-bottom:15px;display:none;">
+
+        <label>宅配地址</label>
+        <input type="text" id="address" placeholder="完整收件地址">
+
+      </div>
+
+      <div class="field">
+        <label>備註需求</label>
+        <textarea id="note" rows="2"></textarea>
+      </div>
+
+    </div>
+
+    <div class="price-display" id="price-display"></div>
+
+    <button class="submit-btn"
+      id="submit-btn"
+      onclick="submitOrder()">
+
+      確認送出訂單
+
+    </button>
 
   </div>
-
-  <div class="card">
-
-    <h2>收件資訊</h2>
-
-    <div class="field">
-      <label>聯絡姓名</label>
-      <input type="text" id="name" placeholder="請填寫姓名">
-    </div>
-
-    <div class="field">
-      <label>手機號碼</label>
-      <input type="tel" id="phone" placeholder="09XX-XXX-XXX">
-    </div>
-
-    <div
-      class="field"
-      id="address-section"
-      style="display:none;">
-
-      <label>宅配地址</label>
-
-      <input
-        type="text"
-        id="address"
-        placeholder="完整收件地址">
-
-    </div>
-
-    <div class="field">
-      <label>備註需求</label>
-      <textarea id="note" rows="2"></textarea>
-    </div>
-
-  </div>
-
-  <div class="price-display" id="price-display"></div>
-
-  <button
-    class="submit-btn"
-    id="submit-btn"
-    onclick="submitOrder()">
-
-    確認送出訂單
-
-  </button>
 
 </div>
 
@@ -327,42 +409,16 @@ const API_URL =
 
 const SPECS = [
 
-  {
-    name:'🍑 特2顆（自取限定）',
-    short:'特2顆',
-    price:150,
-    pickupOnly:true
-  },
+  { name:'特2顆', price:150, key:'spec0', pickupOnly:true },
+  { name:'特4顆', price:200, key:'spec1', pickupOnly:true },
 
-  {
-    name:'🍑 特4顆（自取限定）',
-    short:'特4顆',
-    price:200,
-    pickupOnly:true
-  },
-
-  {
-    name:'🎁 禮盒大6顆',
-    short:'禮盒大6顆',
-    price:500
-  },
-
-  {
-    name:'🎁 禮盒大8顆',
-    short:'禮盒大8顆',
-    price:450
-  },
-
-  {
-    name:'🍑 家庭盒中16顆',
-    short:'家庭盒中16顆',
-    price:400
-  }
+  { name:'禮盒大6顆', price:500, key:'spec2' },
+  { name:'禮盒大8顆', price:450, key:'spec3' },
+  { name:'家庭盒中16顆', price:400, key:'spec4' }
 
 ];
 
-let pickupQtys = [0,0,0,0,0];
-let deliveryQtys = [0,0,0,0,0];
+let qtys = [0,0,0,0,0];
 
 let deliveryType = '自取';
 
@@ -371,191 +427,141 @@ let lineUserId = '';
 
 const SHIPPING_PER_BOX = 290;
 
-function getCurrentQtys(){
+async function init() {
 
-  return deliveryType === '自取'
-    ? pickupQtys
-    : deliveryQtys;
-
-}
-
-function renderSpecs(){
-
-  const qtys = getCurrentQtys();
-
-  let html = '';
-
-  SPECS.forEach((spec,index)=>{
-
-    if (
-      deliveryType === '宅配' &&
-      spec.pickupOnly
-    ) return;
-
-    html += `
-      <div
-        class="spec-card ${qtys[index] > 0 ? 'has-qty' : ''}"
-        id="spec-card-${index}">
-
-        <div class="spec-header">
-
-          <div>
-            <div class="spec-name">${spec.name}</div>
-            <div class="spec-price">
-              NT$ ${spec.price} / 盒
-            </div>
-          </div>
-
-          <div class="qty-control">
-
-            <button
-              class="qty-btn"
-              onclick="changeQty(${index},-1)">
-              −
-            </button>
-
-            <span
-              class="qty-num"
-              id="qty-${index}">
-              ${qtys[index]}
-            </span>
-
-            <button
-              class="qty-btn"
-              onclick="changeQty(${index},1)">
-              +
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-    `;
-
-  });
-
-  document.getElementById('spec-list').innerHTML =
-    html;
-
-}
-
-async function init(){
-
-  try{
+  try {
 
     await liff.init({ liffId: LIFF_ID });
 
-    if(liff.isLoggedIn()){
+    if (liff.isLoggedIn()) {
 
-      const profile =
-        await liff.getProfile();
+      const profile = await liff.getProfile();
 
       lineName = profile.displayName;
       lineUserId = profile.userId;
 
-    }else{
+    } else {
 
       liff.login();
 
     }
 
-  }catch(e){}
+  } catch(e) {}
 
-  renderSpecs();
+  updateSpecVisibility();
   updatePriceDisplay();
 
 }
 
-function setDelivery(type){
+function setDelivery(type) {
 
   deliveryType = type;
 
   document.getElementById('btn-pickup').className =
-    'delivery-btn' +
-    (type === '自取' ? ' active' : '');
+    'delivery-btn' + (type === '自取' ? ' active' : '');
 
   document.getElementById('btn-delivery').className =
-    'delivery-btn' +
-    (type === '宅配' ? ' active' : '');
+    'delivery-btn' + (type === '宅配' ? ' active' : '');
 
   document.getElementById('address-section').style.display =
-    type === '宅配'
-      ? 'block'
-      : 'none';
+    type === '宅配' ? 'block' : 'none';
 
-  renderSpecs();
+  updateSpecVisibility();
+
   updatePriceDisplay();
 
 }
 
-function changeQty(idx,delta){
+function updateSpecVisibility() {
 
-  const qtys = getCurrentQtys();
+  const pickupOnlyCards =
+    document.querySelectorAll('.pickup-only');
 
-  qtys[idx] =
-    Math.max(0, qtys[idx] + delta);
+  pickupOnlyCards.forEach(card => {
 
-  renderSpecs();
+    card.style.display =
+      deliveryType === '自取'
+        ? 'block'
+        : 'none';
+
+  });
+
+  if (deliveryType === '宅配') {
+
+    qtys[0] = 0;
+    qtys[1] = 0;
+
+    document.getElementById('qty-0').textContent = 0;
+    document.getElementById('qty-1').textContent = 0;
+
+  }
+
+}
+
+function changeQty(idx, delta) {
+
+  qtys[idx] = Math.max(0, qtys[idx] + delta);
+
+  document.getElementById('qty-' + idx).textContent =
+    qtys[idx];
+
+  document.getElementById('spec-card-' + idx).className =
+    'spec-card' +
+    (SPECS[idx].pickupOnly ? ' pickup-only' : '') +
+    (qtys[idx] > 0 ? ' has-qty' : '');
+
   updatePriceDisplay();
 
 }
 
-function calcShipping(){
+function calcShipping() {
 
-  if(deliveryType !== '宅配') return 0;
+  if (deliveryType !== '宅配') return 0;
 
-  const qtys = deliveryQtys;
-
-  const totalBoxes =
+  const deliveryBoxes =
     qtys[2] +
     qtys[3] +
     qtys[4];
 
-  if(totalBoxes === 0) return 0;
+  if (deliveryBoxes === 0) return 0;
 
-  return Math.ceil(totalBoxes / 2)
-    * SHIPPING_PER_BOX;
+  const shippingUnits =
+    Math.ceil(deliveryBoxes / 2);
+
+  return shippingUnits * SHIPPING_PER_BOX;
 
 }
 
-function updatePriceDisplay(){
-
-  const qtys = getCurrentQtys();
+function updatePriceDisplay() {
 
   let html = '';
 
   let subtotal = 0;
 
-  SPECS.forEach((spec,index)=>{
+  for (let i = 0; i < SPECS.length; i++) {
 
-    if(qtys[index] <= 0) return;
+    if (qtys[i] <= 0) continue;
 
-    const amount =
-      qtys[index] * spec.price;
+    const amount = qtys[i] * SPECS[i].price;
 
     subtotal += amount;
 
     html += `
       <div class="price-row">
-        <span>
-          ${spec.short} x ${qtys[index]}
-        </span>
-        <span>
-          NT$ ${amount}
-        </span>
+        <span>${SPECS[i].name} x ${qtys[i]}</span>
+        <span>NT$ ${amount}</span>
       </div>
     `;
 
-  });
+  }
 
   const shipping = calcShipping();
 
-  if(shipping > 0){
+  if (shipping > 0) {
 
     html += `
       <div class="price-row">
-        <span>黑貓冷藏宅配運費</span>
+        <span>冷藏宅配運費</span>
         <span>NT$ ${shipping}</span>
       </div>
     `;
@@ -576,21 +582,7 @@ function updatePriceDisplay(){
 
 }
 
-async function submitOrder(){
-
-  const qtys = getCurrentQtys();
-
-  const totalBoxes =
-    qtys.reduce((a,b)=>a+b,0);
-
-  if(totalBoxes === 0){
-
-    document.getElementById('empty-warning')
-      .style.display = 'block';
-
-    return;
-
-  }
+async function submitOrder() {
 
   const name =
     document.getElementById('name').value.trim();
@@ -604,19 +596,30 @@ async function submitOrder(){
   const note =
     document.getElementById('note').value.trim();
 
-  if(!name || !phone){
+  const totalBoxes =
+    qtys.reduce((a,b)=>a+b,0);
 
-    alert('請填寫姓名和電話');
+  if (totalBoxes === 0) {
+
+    document.getElementById('empty-warning')
+      .style.display = 'block';
+
     return;
 
   }
 
-  if(
-    deliveryType === '宅配' &&
-    !address
-  ){
+  if (!name || !phone) {
+
+    alert('請填寫姓名和電話');
+
+    return;
+
+  }
+
+  if (deliveryType === '宅配' && !address) {
 
     alert('請填寫宅配地址');
+
     return;
 
   }
@@ -625,21 +628,19 @@ async function submitOrder(){
 
   let subtotal = 0;
 
-  SPECS.forEach((spec,index)=>{
+  for (let i = 0; i < SPECS.length; i++) {
 
-    subtotal +=
-      qtys[index] * spec.price;
+    subtotal += qtys[i] * SPECS[i].price;
 
-  });
+  }
 
-  const totalAmount =
-    subtotal + shipping;
+  const totalAmount = subtotal + shipping;
 
   const specSummary =
     SPECS.map((s,i)=>
 
       qtys[i] > 0
-        ? s.short + ' x' + qtys[i]
+        ? s.name + ' x' + qtys[i]
         : null
 
     ).filter(Boolean).join('、');
@@ -651,7 +652,7 @@ async function submitOrder(){
 
   btn.textContent = '訂單處理中...';
 
-  try{
+  try {
 
     const params = new URLSearchParams({
 
@@ -677,10 +678,7 @@ async function submitOrder(){
 
       amount:String(totalAmount),
 
-      address:
-        deliveryType === '宅配'
-          ? address
-          : '自取',
+      address:address || '自取',
 
       note:note || ''
 
@@ -692,19 +690,19 @@ async function submitOrder(){
     const result =
       await res.json();
 
-    if(result.status === 'success'){
+    if (result.status === 'success') {
 
       alert('訂單送出成功！');
 
       location.reload();
 
-    }else{
+    } else {
 
       throw new Error();
 
     }
 
-  }catch(e){
+  } catch(e) {
 
     alert('送出失敗，請稍後再試');
 
