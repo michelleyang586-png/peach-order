@@ -704,15 +704,19 @@ async function submitOrder(){
 
     }
 
-  }catch(e){
-
-    alert('送出失敗，請稍後再試');
-
-    btn.disabled = false;
-
-    btn.textContent = '確認送出訂單';
-
   }
+  catch(e) {
+
+  console.error('訂單送出錯誤:', e);
+
+  alert(
+    '送出失敗：\n' +
+    (e.message || JSON.stringify(e))
+  );
+
+  btn.disabled = false;
+
+  btn.textContent = '確認送出訂單';
 
 }
 
