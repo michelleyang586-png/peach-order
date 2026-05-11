@@ -110,34 +110,38 @@ body {
 
 .spec-header {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.spec-info {
-  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .qty-control {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
+  gap: 15px;
 }
 
 .qty-btn {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   border: none;
   background: white;
   color: var(--peach-main);
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
   cursor: pointer;
-  flex-shrink: 0;
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
+}
+
+.qty-num {
+  font-size: 22px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
 }
 
 .qty-btn:active {
