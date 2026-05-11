@@ -131,21 +131,33 @@ body {
   gap: 15px;
 }
 
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .qty-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   border: none;
   background: white;
   color: var(--peach-main);
-  font-size: 18px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  cursor: pointer;
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
 }
 
 .qty-num {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
-  min-width: 24px;
+  min-width: 30px;
   text-align: center;
 }
 
@@ -274,7 +286,14 @@ textarea {
 
           <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(0,-1)">−</button>
-            <span class="qty-num" id="qty-0">0</span>
+            <input
+  type="number"
+  class="qty-input"
+  id="qty-0"
+  value="0"
+  min="0"
+  onchange="manualQty(0,this.value)"
+>
             <button class="qty-btn" onclick="changeQty(0,1)">+</button>
           </div>
         </div>
