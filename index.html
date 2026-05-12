@@ -158,7 +158,7 @@
 <!-- 訂購主畫面 -->
 <div id="main-screen">
   <div class="header">
-    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 520水蜜桃</h1>
+    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 紅鈴水蜜桃</h1>
     <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
 
@@ -273,8 +273,8 @@
       </div>
       <!-- 自取地點資訊（自取時顯示）-->
       <div id="pickup-info-section" class="pickup-info">
-        📍 <b>自取地點：</b>苗栗縣公館鄉館東村和東街<br>
-        🕐 <b>取貨時間：</b>每日 09:00 – 17:00，請先電話聯絡<br>
+        📍 <b>自取地點：</b>新竹縣尖石鄉梅花村 XX 號<br>
+        🕐 <b>取貨時間：</b>每日 08:00 – 17:00<br>
         📞 如需調整取貨時間請提前聯繫
       </div>
       <!-- 宅配備註（宅配時顯示）-->
@@ -320,7 +320,7 @@
   var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
   var SHIPPING_PER_BOX = 290;
   // 自取地點（顯示於通知與成功頁）
-  var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街48號（每日 09:00–17:00，請先電話聯絡）';
+  var PICKUP_ADDRESS = '新竹縣尖石鄉梅花村 XX 號（每日 08:00–17:00）';
 
   var SPECS = [
     { name: '特2顆',        price: 150, pickupOnly: true  },
@@ -574,8 +574,6 @@
       return qtys[i] > 0 ? s.name + ' x' + qtys[i] : null;
     }).filter(Boolean).join('、');
 
-    var orderId = generateOrderId();
-
     var btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.textContent = '訂單處理中...';
@@ -583,7 +581,6 @@
     try {
       var params = new URLSearchParams({
         action: 'order',
-        orderId: orderId,
         lineName: lineName || name,
         recipientName: name,
         lineUserId: lineUserId || '',
@@ -604,7 +601,8 @@
       var result = await res.json();
 
       if (result.status === 'success') {
-        // 【修正2】送 LINE 通知（非阻斷性）
+        var orderId = result.orderId; // 使用後端產生的正式訂單編號
+        // 送 LINE 通知（非阻斷性）
         await sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note);
         // 顯示成功畫面
         showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
