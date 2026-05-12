@@ -4,191 +4,281 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>餘有榮焉｜水蜜桃訂購</title>
-  <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+
   <style>
     :root {
       --peach-main: #FF8A8A;
       --peach-light: #FFF0F0;
       --bg-color: #FAFAFA;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: var(--bg-color); color: #444; line-height: 1.5;
+      background: var(--bg-color);
+      color: #444;
+      line-height: 1.5;
     }
+
     .header {
       background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
-      color: white; padding: 40px 20px; text-align: center;
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
       border-radius: 0 0 30px 30px;
       box-shadow: 0 4px 15px rgba(255,138,138,0.3);
     }
-    .header h1 { font-size: 24px; letter-spacing: 1px; }
-    .header p  { font-size: 14px; margin-top: 8px; opacity: 0.9; }
-    .container { padding: 20px 16px; max-width: 500px; margin: -20px auto 0; }
-    .card {
-      background: white; border-radius: 18px; padding: 20px;
-      margin-bottom: 16px; box-shadow: 0 8px 24px rgba(149,157,165,0.1);
-    }
-    .card h2 { font-size: 16px; color: var(--peach-main); margin-bottom: 16px; }
 
-    /* 取貨切換 */
+    .header h1 {
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      font-size: 14px;
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+
+    .container {
+      padding: 20px 16px;
+      max-width: 500px;
+      margin: -20px auto 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(149,157,165,0.1);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      color: var(--peach-main);
+      margin-bottom: 16px;
+    }
+
     .delivery-toggle {
-      display: flex; gap: 10px; background: #F0F0F0;
-      padding: 4px; border-radius: 12px;
+      display: flex;
+      gap: 10px;
+      background: #F0F0F0;
+      padding: 4px;
+      border-radius: 12px;
     }
+
     .delivery-btn {
-      flex: 1; padding: 10px; border: none; border-radius: 10px;
-      background: transparent; font-size: 14px; cursor: pointer; color: #777;
-      transition: all 0.2s;
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      font-size: 14px;
+      cursor: pointer;
+      color: #777;
     }
+
     .delivery-btn.active {
-      background: white; color: var(--peach-main); font-weight: bold;
+      background: white;
+      color: var(--peach-main);
+      font-weight: bold;
       box-shadow: 0 2px 8px rgba(255,138,138,0.15);
     }
 
-    /* 規格卡片 */
     .spec-card {
-      border: 1px solid #EEE; border-radius: 14px;
-      padding: 16px; margin-bottom: 12px; transition: 0.3s;
+      border: 1px solid #EEE;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: 0.3s;
     }
-    .spec-card.has-qty { border-color: var(--peach-main); background: var(--peach-light); }
+
+    .spec-card.has-qty {
+      border-color: var(--peach-main);
+      background: var(--peach-light);
+    }
+
     .spec-header {
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .spec-name  { font-size: 16px; font-weight: 600; }
-    .spec-price { font-size: 15px; color: var(--peach-main); font-weight: 700; }
 
-    /* 數量控制 */
-    .qty-control { display: flex; align-items: center; gap: 10px; }
+    .spec-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .spec-price {
+      font-size: 15px;
+      color: var(--peach-main);
+      font-weight: 700;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .qty-btn {
-      width: 32px; height: 32px; border-radius: 10px; border: none;
-      background: white; color: var(--peach-main); font-size: 18px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer; flex-shrink: 0;
-    }
-    .qty-input {
-      width: 44px; height: 36px;
-      border: 1.5px solid #DDD; border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      border: none;
       background: white;
-      font-size: 17px; font-weight: bold; color: #444;
-      text-align: center; padding: 0;
-      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-      -moz-appearance: textfield;
+      color: var(--peach-main);
+      font-size: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      flex-shrink: 0;
     }
-    .qty-input::-webkit-inner-spin-button,
-    .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    .qty-input:focus { outline: none; border-color: var(--peach-main); }
-    .spec-card.has-qty .qty-input { border-color: var(--peach-main); color: var(--peach-main); }
 
-    /* 自取提示標籤 */
+    .qty-input {
+      width: 44px;
+      height: 36px;
+      border: 1.5px solid #DDD;
+      border-radius: 8px;
+      background: white;
+      font-size: 17px;
+      font-weight: bold;
+      color: #444;
+      text-align: center;
+      padding: 0;
+    }
+
     .pickup-tag {
-      display: inline-block; font-size: 11px; color: #fff;
-      background: var(--peach-main); border-radius: 6px;
-      padding: 1px 7px; margin-left: 6px; vertical-align: middle; opacity: 0.85;
+      display: inline-block;
+      font-size: 11px;
+      color: #fff;
+      background: var(--peach-main);
+      border-radius: 6px;
+      padding: 1px 7px;
+      margin-left: 6px;
     }
 
-    /* 收件資訊欄位 */
-    .field label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; display: block; }
-    input[type="text"], input[type="tel"], textarea {
-      background: #F9F9F9; border: 1px solid #EDEDED;
-      padding: 14px; border-radius: 12px; font-size: 15px; width: 100%;
-      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
-      outline: none; border-color: var(--peach-main);
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #888;
+      margin-bottom: 8px;
+      display: block;
     }
 
-    /* 自取地點卡片 */
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+      background: #F9F9F9;
+      border: 1px solid #EDEDED;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      width: 100%;
+    }
+
     .pickup-info {
-      background: #FFF8F8; border: 1px dashed #FFBABA;
-      border-radius: 12px; padding: 14px; margin-top: 12px;
-      font-size: 13px; color: #888; line-height: 1.8;
+      background: #FFF8F8;
+      border: 1px dashed #FFBABA;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #888;
+      line-height: 1.8;
     }
-    .pickup-info b { color: var(--peach-main); }
 
-    /* 金額顯示 */
-    .price-display { background: #333; color: #EEE; border-radius: 16px; padding: 20px; margin-top: 10px; }
-    .price-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
+    .price-display {
+      background: #333;
+      color: #EEE;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 10px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
     .price-total {
-      display: flex; justify-content: space-between;
-      font-size: 20px; font-weight: bold; color: white;
-      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 12px;
+      margin-top: 8px;
     }
 
-    /* 送出按鈕 */
     .submit-btn {
-      width: 100%; padding: 18px; background: var(--peach-main);
-      color: white; border: none; border-radius: 18px;
-      font-size: 17px; font-weight: bold; margin: 20px 0 40px; cursor: pointer;
-      transition: opacity 0.2s;
+      width: 100%;
+      padding: 18px;
+      background: var(--peach-main);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: bold;
+      margin: 20px 0 40px;
+      cursor: pointer;
     }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .peach-down { display: inline-block; transform: rotate(180deg); }
 
-    /* 成功畫面 */
     #success-screen {
-      display: none; min-height: 100vh;
+      display: none;
+      min-height: 100vh;
       background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
-      padding: 40px 20px; text-align: center;
-    }
-    .success-icon { font-size: 64px; margin-bottom: 16px; }
-    .success-title { font-size: 22px; font-weight: bold; color: white; margin-bottom: 8px; }
-    .success-sub { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
-    .order-summary-card {
-      background: white; border-radius: 18px; padding: 20px;
-      text-align: left; margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(149,157,165,0.15);
-    }
-    .order-summary-card h3 { font-size: 15px; color: var(--peach-main); margin-bottom: 14px; }
-    .order-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; border-bottom: 1px solid #F5F5F5; }
-    .order-row:last-child { border-bottom: none; }
-    .order-row .label { color: #999; }
-    .order-row .value { font-weight: 600; color: #444; text-align: right; max-width: 60%; }
-    .order-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; padding-top: 12px; margin-top: 4px; border-top: 2px solid #F0F0F0; }
-    .order-total-row .value { color: var(--peach-main); }
-    .back-btn {
-      background: white; color: var(--peach-main); border: none;
-      border-radius: 16px; padding: 16px 40px; font-size: 16px; font-weight: bold;
-      cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 40px 20px;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
 
-<!-- 訂購主畫面 -->
 <div id="main-screen">
   <div class="header">
-    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 紅鈴水蜜桃</h1>
+    <h1>餘有榮焉 🍑 紅鈴水蜜桃</h1>
     <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
 
   <div class="container">
 
-    <!-- 取貨方式 -->
     <div class="card">
       <h2>取貨方式</h2>
+
       <div class="delivery-toggle">
         <button class="delivery-btn active" onclick="setDelivery('自取')" id="btn-pickup">
-          &#x1F3EA; 現場自取
+          🏪 現場自取
         </button>
+
         <button class="delivery-btn" onclick="setDelivery('宅配')" id="btn-delivery">
-          &#x2744;&#xFE0F; 黑貓冷藏宅配
+          ❄️ 黑貓冷藏宅配
         </button>
       </div>
     </div>
 
-    <!-- 規格選擇 -->
     <div class="card">
       <h2>挑選規格</h2>
 
       <div class="spec-card pickup-only" id="spec-card-0">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F351; 特2顆<span class="pickup-tag">自取限定</span></div>
+            <div class="spec-name">🍑 特2顆 <span class="pickup-tag">自取限定</span></div>
             <div class="spec-price">NT$ 150 / 盒</div>
           </div>
+
           <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(0,-1)">&#x2212;</button>
+            <button class="qty-btn" onclick="stepQty(0,-1)">−</button>
             <input class="qty-input" type="number" id="qty-0" value="0" min="0" oninput="inputQty(0,this.value)">
             <button class="qty-btn" onclick="stepQty(0,1)">+</button>
           </div>
@@ -198,101 +288,44 @@
       <div class="spec-card pickup-only" id="spec-card-1">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F351; 特4顆<span class="pickup-tag">自取限定</span></div>
+            <div class="spec-name">🍑 特4顆 <span class="pickup-tag">自取限定</span></div>
             <div class="spec-price">NT$ 200 / 盒</div>
           </div>
+
           <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(1,-1)">&#x2212;</button>
+            <button class="qty-btn" onclick="stepQty(1,-1)">−</button>
             <input class="qty-input" type="number" id="qty-1" value="0" min="0" oninput="inputQty(1,this.value)">
             <button class="qty-btn" onclick="stepQty(1,1)">+</button>
           </div>
         </div>
       </div>
 
-      <div class="spec-card" id="spec-card-2">
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">&#x1F381; 禮盒大6顆</div>
-            <div class="spec-price">NT$ 500 / 盒</div>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(2,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-2" value="0" min="0" oninput="inputQty(2,this.value)">
-            <button class="qty-btn" onclick="stepQty(2,1)">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="spec-card" id="spec-card-3">
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">&#x1F381; 禮盒大8顆</div>
-            <div class="spec-price">NT$ 450 / 盒</div>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(3,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-3" value="0" min="0" oninput="inputQty(3,this.value)">
-            <button class="qty-btn" onclick="stepQty(3,1)">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="spec-card" id="spec-card-4">
-        <div class="spec-header">
-          <div>
-            <div class="spec-name">&#x1F351; 家庭盒中16顆</div>
-            <div class="spec-price">NT$ 400 / 盒</div>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(4,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-4" value="0" min="0" oninput="inputQty(4,this.value)">
-            <button class="qty-btn" onclick="stepQty(4,1)">+</button>
-          </div>
-        </div>
-      </div>
-
-      <p id="empty-warning" style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
-        別忘了選購好吃的水蜜桃喔！
-      </p>
     </div>
 
-    <!-- 收件資訊 -->
     <div class="card">
       <h2>收件資訊</h2>
+
       <div class="field" style="margin-bottom:15px;">
         <label>聯絡姓名</label>
         <input type="text" id="name" placeholder="請填寫姓名">
       </div>
+
       <div class="field" style="margin-bottom:15px;">
         <label>手機號碼</label>
         <input type="tel" id="phone" placeholder="09XX-XXX-XXX">
       </div>
+
       <div class="field" id="address-section" style="margin-bottom:15px;display:none;">
         <label>宅配地址</label>
         <input type="text" id="address" placeholder="完整收件地址">
       </div>
-      <!-- 自取地點資訊（自取時顯示）-->
-      <div id="pickup-info-section" class="pickup-info">
-        📍 <b>自取地點：</b>新竹縣尖石鄉梅花村 XX 號<br>
-        🕐 <b>取貨時間：</b>每日 08:00 – 17:00<br>
-        📞 如需調整取貨時間請提前聯繫
-      </div>
-      <!-- 宅配備註（宅配時顯示）-->
-      <div id="delivery-info-section" class="pickup-info" style="display:none; border-color:#B8DAFF; background:#F0F7FF;">
-        ❄️ <b>黑貓冷藏宅配說明：</b><br>
-        💳 請完成匯款後告知，<b style="color:#4A90D9;">依匯款順序出貨</b><br>
-        📦 冷藏配送，建議有人簽收<br>
-        🕐 出貨後約 1–2 個工作天到貨
-      </div>
-      <div class="field" style="margin-top:15px;">
-        <label>備註需求</label>
-        <textarea id="note" rows="2" placeholder="如需指定到貨日期或其他需求請在此填寫"></textarea>
-      </div>
     </div>
 
-    <!-- 金額顯示 -->
     <div class="price-display" id="price-display">
-      <div class="price-total"><span>總計金額</span><span>NT$ 0</span></div>
+      <div class="price-total">
+        <span>總計金額</span>
+        <span>NT$ 0</span>
+      </div>
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
@@ -302,354 +335,145 @@
   </div>
 </div>
 
-<!-- 訂單成功畫面 -->
 <div id="success-screen">
-  <div class="success-icon">🎉</div>
-  <div class="success-title">訂單成立囉！</div>
-  <div class="success-sub">感謝您的訂購，我們會盡快為您準備</div>
-
-  <div class="order-summary-card" id="success-summary">
-    <!-- 動態填入 -->
-  </div>
-
-  <button class="back-btn" onclick="location.reload()">繼續訂購</button>
+  <h1 style="color:white;">🎉 訂單成立</h1>
 </div>
 
 <script>
-  var LIFF_ID  = '2009767596-jd7WjD99';
-  var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
+
+  var API_URL = 'https://peach-api-indol.vercel.app/api/order';
   var SHIPPING_PER_BOX = 290;
-  // 自取地點（顯示於通知與成功頁）
-  var PICKUP_ADDRESS = '新竹縣尖石鄉梅花村 XX 號（每日 08:00–17:00）';
 
   var SPECS = [
-    { name: '特2顆',        price: 150, pickupOnly: true  },
-    { name: '特4顆',        price: 200, pickupOnly: true  },
-    { name: '禮盒大6顆',    price: 500, pickupOnly: false },
-    { name: '禮盒大8顆',    price: 450, pickupOnly: false },
-    { name: '家庭盒中16顆', price: 400, pickupOnly: false }
+    { name: '特2顆', price: 150, pickupOnly: true },
+    { name: '特4顆', price: 200, pickupOnly: true }
   ];
 
-  var qtys = [0, 0, 0, 0, 0];
+  var qtys = [0,0];
   var deliveryType = '自取';
-  var lineName = '';
-  var lineUserId = '';
 
-  // ── 把 qtys[idx] 寫回畫面
-  // 【關鍵】className 只負責樣式（has-qty），display 由 updateSpecVisibility 獨立管理
-  //         不在 syncUI 裡碰 display，避免蓋掉隱藏狀態
   function syncUI(idx) {
-    var el = document.getElementById('qty-' + idx);
-    el.value = qtys[idx];
-    var card = document.getElementById('spec-card-' + idx);
-    // 保留現有 class，只切換 has-qty
-    var classes = ['spec-card'];
-    if (SPECS[idx].pickupOnly) classes.push('pickup-only');
-    if (qtys[idx] > 0) classes.push('has-qty');
-    card.className = classes.join(' ');
+    document.getElementById('qty-' + idx).value = qtys[idx];
   }
 
-  // ── +/- 按鈕
   function stepQty(idx, delta) {
     qtys[idx] = Math.max(0, qtys[idx] + delta);
     syncUI(idx);
-    document.getElementById('empty-warning').style.display = 'none';
     updatePriceDisplay();
   }
 
-  // ── 直接輸入
   function inputQty(idx, val) {
-    var n = parseInt(val, 10);
-    qtys[idx] = (isNaN(n) || n < 0) ? 0 : n;
-    var card = document.getElementById('spec-card-' + idx);
-    var classes = ['spec-card'];
-    if (SPECS[idx].pickupOnly) classes.push('pickup-only');
-    if (qtys[idx] > 0) classes.push('has-qty');
-    card.className = classes.join(' ');
-    document.getElementById('empty-warning').style.display = 'none';
+    qtys[idx] = parseInt(val, 10) || 0;
     updatePriceDisplay();
   }
 
-  // ── LIFF 初始化
-  async function init() {
-    try {
-      if (typeof liff === 'undefined') {
-        console.warn('LIFF SDK 未載入，以一般瀏覽器模式運行');
-      } else {
-        await liff.init({ liffId: LIFF_ID });
-        if (liff.isLoggedIn()) {
-          var profile = await liff.getProfile();
-          lineName   = profile.displayName;
-          lineUserId = profile.userId;
-        } else {
-          liff.login();
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn('LIFF init failed:', e);
-    }
-    updateSpecVisibility();
-    updatePriceDisplay();
-  }
-
-  // ── 取貨方式切換
-  // 【修正1】切換時先把所有 input 的即時值同步回 qtys，
-  //          再執行自取限定清零，避免殘留數值被帶入。
   function setDelivery(type) {
-    // 先將目前 DOM 值同步回 qtys（防止 oninput 還沒觸發的邊界情況）
-    for (var j = 0; j < 5; j++) {
-      var v = parseInt(document.getElementById('qty-' + j).value, 10);
-      qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
-    }
-
     deliveryType = type;
-    document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
-    document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
-    document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
-    document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
-    document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
 
-    updateSpecVisibility(); // 內含清零與 syncUI
-    updatePriceDisplay();
+    document.getElementById('btn-pickup').className =
+      'delivery-btn' + (type === '自取' ? ' active' : '');
+
+    document.getElementById('btn-delivery').className =
+      'delivery-btn' + (type === '宅配' ? ' active' : '');
+
+    document.getElementById('address-section').style.display =
+      type === '宅配' ? 'block' : 'none';
   }
 
-  // ── 顯示/隱藏自取限定規格，切宅配時強制清零
-  // 【關鍵】用明確 ID 控制 display，不依賴 querySelectorAll('.pickup-only')
-  //         避免 syncUI 重建 className 時遺失 display:none
-  var PICKUP_ONLY_IDS = [0, 1]; // 自取限定的規格索引
-  function updateSpecVisibility() {
-    var isPickup = deliveryType === '自取';
-    PICKUP_ONLY_IDS.forEach(function(idx) {
-      document.getElementById('spec-card-' + idx).style.display = isPickup ? 'block' : 'none';
-    });
-    if (!isPickup) {
-      // 切到宅配：強制清零自取限定，並同步畫面
-      PICKUP_ONLY_IDS.forEach(function(idx) {
-        qtys[idx] = 0;
-        syncUI(idx);
-        // 確保 display:none 不被 syncUI 蓋掉
-        document.getElementById('spec-card-' + idx).style.display = 'none';
-      });
-    }
-  }
-
-  // ── 運費計算
   function calcShipping() {
     if (deliveryType !== '宅配') return 0;
-    var boxes = qtys[2] + qtys[3] + qtys[4];
-    if (boxes === 0) return 0;
-    return Math.ceil(boxes / 2) * SHIPPING_PER_BOX;
+
+    var total = qtys.reduce((a,b) => a+b, 0);
+
+    if (total === 0) return 0;
+
+    return Math.ceil(total / 2) * SHIPPING_PER_BOX;
   }
 
-  // ── 金額顯示更新
   function updatePriceDisplay() {
-    var html = '';
     var subtotal = 0;
-    for (var i = 0; i < SPECS.length; i++) {
-      if (qtys[i] <= 0) continue;
-      var amount = qtys[i] * SPECS[i].price;
-      subtotal += amount;
-      html += '<div class="price-row"><span>' + SPECS[i].name + ' x ' + qtys[i] + '</span><span>NT$ ' + amount + '</span></div>';
+
+    for (var i=0; i<SPECS.length; i++) {
+      subtotal += qtys[i] * SPECS[i].price;
     }
+
     var shipping = calcShipping();
-    if (shipping > 0) {
-      html += '<div class="price-row"><span>黑貓冷藏宅配運費</span><span>NT$ ' + shipping + '</span></div>';
-    }
     var total = subtotal + shipping;
-    html += '<div class="price-total"><span>總計金額</span><span>NT$ ' + total + '</span></div>';
-    document.getElementById('price-display').innerHTML = html;
+
+    document.getElementById('price-display').innerHTML =
+      '<div class="price-total"><span>總計金額</span><span>NT$ ' + total + '</span></div>';
   }
 
-  // ── 匯款資訊
-  var BANK_INFO = {
-    name: '中華郵政',
-    code: '700',
-    account: '02910910200312'
-  };
-
-  // ── 送出後發 LINE 通知訊息
-  async function sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note) {
-    if (typeof liff === 'undefined' || !liff.isInClient()) return;
-
-    var isDelivery = deliveryType === '宅配';
-    var noteText   = note ? '\n📝 備註：' + note : '';
-
-    var msgText;
-
-    if (!isDelivery) {
-      // ── 自取版
-      msgText =
-        '🍑【餘有榮焉 訂單確認】\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '📋 訂單編號：' + orderId + '\n' +
-        '👤 訂購人：' + name + '\n' +
-        '📞 電話：' + phone + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🛍️ 訂購內容：\n' +
-        specSummary.replace(/、/g, '\n') + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🏪 取貨方式：現場自取\n' +
-        '📍 自取地點：' + PICKUP_ADDRESS + '\n' +
-        '💰 應付金額：NT$ ' + totalAmount + '（貨到付款）' +
-        noteText + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '感謝訂購！如有問題請直接回覆訊息 🙏';
-    } else {
-      // ── 宅配版（含匯款資訊）
-      var productAmount = totalAmount - shipping;
-      msgText =
-        '❄️【餘有榮焉 訂單確認】\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '📋 訂單編號：' + orderId + '\n' +
-        '👤 訂購人：' + name + '\n' +
-        '📞 電話：' + phone + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🛍️ 訂購內容：\n' +
-        specSummary.replace(/、/g, '\n') + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🚚 取貨方式：黑貓冷藏宅配\n' +
-        '📦 收件地址：' + address + '\n' +
-        '💴 商品金額：NT$ ' + productAmount + '\n' +
-        '🚛 運費：NT$ ' + shipping + '\n' +
-        '💰 應付總金額：NT$ ' + totalAmount +
-        noteText + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🏦【匯款資訊】\n' +
-        '銀行：' + BANK_INFO.name + '（' + BANK_INFO.code + '）\n' +
-        '帳號：' + BANK_INFO.account + '\n' +
-        '⚠️ 請於訂購後 48 小時內完成匯款\n' +
-        '✅ 匯款後請回覆此訊息告知，依匯款順序出貨\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '感謝訂購！如有問題請直接回覆訊息 🙏';
-    }
-
-    try {
-      // 診斷：確認 LIFF 環境
-      console.log('[LIFF] isInClient:', liff.isInClient());
-      console.log('[LIFF] context:', JSON.stringify(liff.getContext()));
-
-      await liff.sendMessages([{ type: 'text', text: msgText }]);
-      console.log('[LIFF] sendMessages 成功');
-    } catch (e) {
-      console.warn('[LIFF] sendMessages 失敗 code:', e.code, 'msg:', e.message);
-
-      // 根據錯誤碼給顧客明確提示
-      if (e.code === 'FORBIDDEN') {
-        alert('⚠️ LINE 訂單通知發送失敗\n\n請從「餘有榮焉官方帳號」的選單開啟訂購頁面，才能自動收到訂單確認訊息。\n\n您的訂單已成立✅，請截圖保留訂單編號。');
-      } else {
-        alert('⚠️ LINE 訂單通知發送失敗（' + (e.code || e.message) + '）\n\n您的訂單已成立✅，請截圖保留訂單編號。');
-      }
-    }
-  }
-
-  // ── 顯示成功畫面
-  function showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address) {
+  function showSuccessScreen() {
     document.getElementById('main-screen').style.display = 'none';
-    var screen = document.getElementById('success-screen');
-    screen.style.display = 'block';
-
-    var locationHtml = deliveryType === '自取'
-      ? '<div class="order-row"><span class="label">自取地點</span><span class="value">' + PICKUP_ADDRESS + '</span></div>'
-      : '<div class="order-row"><span class="label">宅配地址</span><span class="value">' + address + '</span></div>';
-
-    var shippingHtml = shipping > 0
-      ? '<div class="order-row"><span class="label">冷藏運費</span><span class="value">NT$ ' + shipping + '</span></div>'
-      : '';
-
-    document.getElementById('success-summary').innerHTML =
-      '<h3>🧾 訂單明細</h3>' +
-      '<div class="order-row"><span class="label">訂單編號</span><span class="value">' + orderId + '</span></div>' +
-      '<div class="order-row"><span class="label">訂購人</span><span class="value">' + name + '</span></div>' +
-      '<div class="order-row"><span class="label">取貨方式</span><span class="value">' + deliveryType + '</span></div>' +
-      locationHtml +
-      '<div class="order-row"><span class="label">訂購內容</span><span class="value">' + specSummary.replace(/、/g, '<br>') + '</span></div>' +
-      shippingHtml +
-      '<div class="order-total-row"><span>應付總金額</span><span class="value">NT$ ' + totalAmount + '</span></div>';
+    document.getElementById('success-screen').style.display = 'block';
   }
 
-  // ── 送出訂單
   async function submitOrder() {
-    var name    = document.getElementById('name').value.trim();
-    var phone   = document.getElementById('phone').value.trim();
+
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
     var address = document.getElementById('address').value.trim();
-    var note    = document.getElementById('note').value.trim();
 
-    // 送出前再從 input 同步一次 qtys
-    for (var j = 0; j < 5; j++) {
-      var v = parseInt(document.getElementById('qty-' + j).value, 10);
-      qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
-    }
-    // 宅配時再次確保自取限定為零（雙重保險）
-    if (deliveryType === '宅配') {
-      qtys[0] = 0;
-      qtys[1] = 0;
-    }
-
-    var totalBoxes = qtys.reduce(function(a, b) { return a + b; }, 0);
-    if (totalBoxes === 0) {
-      document.getElementById('empty-warning').style.display = 'block';
+    if (!name || !phone) {
+      alert('請填寫姓名與電話');
       return;
     }
-    if (!name || !phone) { alert('請填寫姓名和電話'); return; }
-    if (deliveryType === '宅配' && !address) { alert('請填寫宅配地址'); return; }
+
+    if (deliveryType === '宅配' && !address) {
+      alert('請填寫宅配地址');
+      return;
+    }
 
     var shipping = calcShipping();
+
     var subtotal = 0;
-    for (var i = 0; i < SPECS.length; i++) { subtotal += qtys[i] * SPECS[i].price; }
+
+    for (var i=0; i<SPECS.length; i++) {
+      subtotal += qtys[i] * SPECS[i].price;
+    }
+
     var totalAmount = subtotal + shipping;
 
     var specSummary = SPECS.map(function(s, i) {
       return qtys[i] > 0 ? s.name + ' x' + qtys[i] : null;
     }).filter(Boolean).join('、');
 
-    var btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = '訂單處理中...';
-
     try {
+
       var params = new URLSearchParams({
         action: 'order',
-        lineName: lineName || name,
         recipientName: name,
-        lineUserId: lineUserId || '',
         phone: phone,
         deliveryType: deliveryType,
-        spec0: String(qtys[0]),
-        spec1: String(qtys[1]),
-        spec2: String(qtys[2]),
-        spec3: String(qtys[3]),
-        spec4: String(qtys[4]),
         specSummary: specSummary,
         amount: String(totalAmount),
-        address: address || '自取（' + PICKUP_ADDRESS + '）',
-        note: note || ''
+        address: address || '自取'
       });
 
-      var res    = await fetch(API_URL + '?' + params.toString());
+      var res = await fetch(API_URL + '?' + params.toString());
       var result = await res.json();
 
       if (result.status === 'success') {
-        var orderId = result.orderId; // 使用後端產生的正式訂單編號
-        // 送 LINE 通知（非阻斷性）
-        await sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note);
-        // 顯示成功畫面
-        showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
+        showSuccessScreen();
       } else {
-        throw new Error('API returned non-success status');
+        alert('送出失敗');
       }
-    } catch (e) {
-      console.error('Submit error:', e);
-      var msg = e.message && e.message.includes('Failed to fetch')
-        ? '網路連線失敗，請確認網路後再試'
-        : '送出失敗，請稍後再試';
-      alert(msg);
-      btn.disabled = false;
-      btn.textContent = '確認送出訂單';
+
+    } catch(e) {
+      console.error(e);
+      alert('送出失敗');
     }
   }
 
+  function init() {
+    updatePriceDisplay();
+  }
+
   init();
+
 </script>
+
 </body>
 </html>
+
