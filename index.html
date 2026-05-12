@@ -468,80 +468,7 @@
     account: '02910910200312'
   };
 
-  // ── 送出後發 LINE 通知訊息
-  async function sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note) {
-    if (typeof liff === 'undefined' || !liff.isInClient()) return;
-
-    var isDelivery = deliveryType === '宅配';
-    var noteText   = note ? '\n📝 備註：' + note : '';
-
-    var msgText;
-
-    if (!isDelivery) {
-      // ── 自取版
-      msgText =
-        '🍑【餘有榮焉 訂單確認】\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '📋 訂單編號：' + orderId + '\n' +
-        '👤 訂購人：' + name + '\n' +
-        '📞 電話：' + phone + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🛍️ 訂購內容：\n' +
-        specSummary.replace(/、/g, '\n') + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🏪 取貨方式：現場自取\n' +
-        '📍 自取地點：' + PICKUP_ADDRESS + '\n' +
-        '💰 應付金額：NT$ ' + totalAmount + '（貨到付款）' +
-        noteText + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '感謝訂購！如有問題請直接回覆訊息 🙏';
-    } else {
-      // ── 宅配版（含匯款資訊）
-      var productAmount = totalAmount - shipping;
-      msgText =
-        '❄️【餘有榮焉 訂單確認】\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '📋 訂單編號：' + orderId + '\n' +
-        '👤 訂購人：' + name + '\n' +
-        '📞 電話：' + phone + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🛍️ 訂購內容：\n' +
-        specSummary.replace(/、/g, '\n') + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🚚 取貨方式：黑貓冷藏宅配\n' +
-        '📦 收件地址：' + address + '\n' +
-        '💴 商品金額：NT$ ' + productAmount + '\n' +
-        '🚛 運費：NT$ ' + shipping + '\n' +
-        '💰 應付總金額：NT$ ' + totalAmount +
-        noteText + '\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '🏦【匯款資訊】\n' +
-        '銀行：' + BANK_INFO.name + '（' + BANK_INFO.code + '）\n' +
-        '帳號：' + BANK_INFO.account + '\n' +
-        '⚠️ 請於訂購後 48 小時內完成匯款\n' +
-        '✅ 匯款後請回覆此訊息告知，依匯款順序出貨\n' +
-        '━━━━━━━━━━━━━━━\n' +
-        '感謝訂購！如有問題請直接回覆訊息 🙏';
-    }
-
-    try {
-      // 診斷：確認 LIFF 環境
-      console.log('[LIFF] isInClient:', liff.isInClient());
-      console.log('[LIFF] context:', JSON.stringify(liff.getContext()));
-
-      await liff.sendMessages([{ type: 'text', text: msgText }]);
-      console.log('[LIFF] sendMessages 成功');
-    } catch (e) {
-      console.warn('[LIFF] sendMessages 失敗 code:', e.code, 'msg:', e.message);
-
-      // 根據錯誤碼給顧客明確提示
-      if (e.code === 'FORBIDDEN') {
-        alert('⚠️ LINE 訂單通知發送失敗\n\n請從「餘有榮焉官方帳號」的選單開啟訂購頁面，才能自動收到訂單確認訊息。\n\n您的訂單已成立✅，請截圖保留訂單編號。');
-      } else {
-        alert('⚠️ LINE 訂單通知發送失敗（' + (e.code || e.message) + '）\n\n您的訂單已成立✅，請截圖保留訂單編號。');
-      }
-    }
-  }
+ 
 
   // ── 顯示成功畫面
   function showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address) {
@@ -632,7 +559,7 @@
       if (result.status === 'success') {
         var orderId = result.orderId; // 使用後端產生的正式訂單編號
         // 送 LINE 通知（非阻斷性）
-        await sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note);
+       
         // 顯示成功畫面
         showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
       } else {
