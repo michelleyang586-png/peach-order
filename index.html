@@ -158,7 +158,7 @@
 <!-- 訂購主畫面 -->
 <div id="main-screen">
   <div class="header">
-    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 520水蜜桃</h1>
+    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 紅鈴水蜜桃</h1>
     <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
 
@@ -273,8 +273,8 @@
       </div>
       <!-- 自取地點資訊（自取時顯示）-->
       <div id="pickup-info-section" class="pickup-info">
-        📍 <b>自取地點：</b>苗栗縣公館鄉館東村和東街<br>
-        🕐 <b>取貨時間：</b>每日 09:00 – 17:00，請先電話聯絡<br>
+        📍 <b>自取地點：</b>新竹縣尖石鄉梅花村 XX 號<br>
+        🕐 <b>取貨時間：</b>每日 08:00 – 17:00<br>
         📞 如需調整取貨時間請提前聯繫
       </div>
       <!-- 宅配備註（宅配時顯示）-->
@@ -320,7 +320,7 @@
   var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
   var SHIPPING_PER_BOX = 290;
   // 自取地點（顯示於通知與成功頁）
-  var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街 48 號（每日 09:00–17:00）';
+  var PICKUP_ADDRESS = '新竹縣尖石鄉梅花村 XX 號（每日 08:00–17:00）';
 
   var SPECS = [
     { name: '特2顆',        price: 150, pickupOnly: true  },
@@ -461,55 +461,72 @@
     document.getElementById('price-display').innerHTML = html;
   }
 
-  // ── 生成訂單編號（日期 + 隨機4碼）
-  function generateOrderId() {
-    var now = new Date();
-    var pad = function(n) { return String(n).padStart(2, '0'); };
-    var date = String(now.getFullYear()).slice(2) + pad(now.getMonth()+1) + pad(now.getDate());
-    var rand = Math.floor(Math.random() * 9000) + 1000;
-    return 'PC' + date + rand;
-  }
+  // ── 匯款資訊
+  var BANK_INFO = {
+    name: '中華郵政',
+    code: '700',
+    account: '02910910200312'
+  };
 
-  // ── 【修正2】送出後發 LINE 通知訊息
+  // ── 送出後發 LINE 通知訊息
   async function sendLineConfirmation(orderId, name, phone, specSummary, totalAmount, shipping, address, note) {
     if (typeof liff === 'undefined' || !liff.isInClient()) return;
 
-    var locationText = deliveryType === '自取'
-      ? '📍 自取地點：' + PICKUP_ADDRESS
-      : '🚚 宅配地址：' + address;
+    var isDelivery = deliveryType === '宅配';
+    var noteText   = note ? '\n📝 備註：' + note : '';
 
-    var shippingText = shipping > 0
-      ? '\n💴 商品金額：NT$ ' + (totalAmount - shipping) + '\n🚚 運費：NT$ ' + shipping
-      : '';
+    var msgText;
 
-    var noteText = note ? '\n📝 備註：' + note : '';
-
-    var msgText =
-      '🍑 【餘有榮焉 水蜜桃訂單確認】\n' +
-      '━━━━━━━━━━━━━━━\n' +
-      '📋 訂單編號：' + orderId + '\n' +
-      '👤 訂購人：' + name + '\n' +
-      '📞 電話：' + phone + '\n' +
-      '━━━━━━━━━━━━━━━\n' +
-      '🛍️ 訂購內容：\n' + specSummary.replace(/、/g, '\n') + '\n' +
-      '━━━━━━━━━━━━━━━\n' +
-      '🚩 取貨方式：' + deliveryType + '\n' +
-      locationText + '\n' +
-      shippingText +
-      '\n💰 應付總金額：NT$ ' + totalAmount +
-      noteText + '\n' +
-      '━━━━━━━━━━━━━━━\n' +
-      '感謝訂購！如有問題請直接回覆訊息洽詢 🙏';
+    if (!isDelivery) {
+      // ── 自取版
+      msgText =
+        '🍑【餘有榮焉 訂單確認】\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '📋 訂單編號：' + orderId + '\n' +
+        '👤 訂購人：' + name + '\n' +
+        '📞 電話：' + phone + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '🛍️ 訂購內容：\n' +
+        specSummary.replace(/、/g, '\n') + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '🏪 取貨方式：現場自取\n' +
+        '📍 自取地點：' + PICKUP_ADDRESS + '\n' +
+        '💰 應付金額：NT$ ' + totalAmount + '（貨到付款）' +
+        noteText + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '感謝訂購！如有問題請直接回覆訊息 🙏';
+    } else {
+      // ── 宅配版（含匯款資訊）
+      var productAmount = totalAmount - shipping;
+      msgText =
+        '❄️【餘有榮焉 訂單確認】\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '📋 訂單編號：' + orderId + '\n' +
+        '👤 訂購人：' + name + '\n' +
+        '📞 電話：' + phone + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '🛍️ 訂購內容：\n' +
+        specSummary.replace(/、/g, '\n') + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '🚚 取貨方式：黑貓冷藏宅配\n' +
+        '📦 收件地址：' + address + '\n' +
+        '💴 商品金額：NT$ ' + productAmount + '\n' +
+        '🚛 運費：NT$ ' + shipping + '\n' +
+        '💰 應付總金額：NT$ ' + totalAmount +
+        noteText + '\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '🏦【匯款資訊】\n' +
+        '銀行：' + BANK_INFO.name + '（' + BANK_INFO.code + '）\n' +
+        '帳號：' + BANK_INFO.account + '\n' +
+        '⚠️ 請於訂購後 48 小時內完成匯款\n' +
+        '✅ 匯款後請回覆此訊息告知，依匯款順序出貨\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '感謝訂購！如有問題請直接回覆訊息 🙏';
+    }
 
     try {
-      await liff.sendMessages([
-        {
-          type: 'text',
-          text: msgText
-        }
-      ]);
+      await liff.sendMessages([{ type: 'text', text: msgText }]);
     } catch (e) {
-      // sendMessages 在部分情境下需 shareTargetPicker，靜默失敗不中斷流程
       console.warn('LINE sendMessages failed:', e);
     }
   }
