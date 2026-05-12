@@ -558,9 +558,7 @@
 
       if (result.status === 'success') {
         var orderId = result.orderId; // 使用後端產生的正式訂單編號
-        // 送 LINE 通知（非阻斷性）
-       
-        // 顯示成功畫面
+        
         showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
       } else {
         throw new Error('API returned non-success status');
