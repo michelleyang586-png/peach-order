@@ -525,9 +525,21 @@
     }
 
     try {
+      // 診斷：確認 LIFF 環境
+      console.log('[LIFF] isInClient:', liff.isInClient());
+      console.log('[LIFF] context:', JSON.stringify(liff.getContext()));
+
       await liff.sendMessages([{ type: 'text', text: msgText }]);
+      console.log('[LIFF] sendMessages 成功');
     } catch (e) {
-      console.warn('LINE sendMessages failed:', e);
+      console.warn('[LIFF] sendMessages 失敗 code:', e.code, 'msg:', e.message);
+
+      // 根據錯誤碼給顧客明確提示
+      if (e.code === 'FORBIDDEN') {
+        alert('⚠️ LINE 訂單通知發送失敗\n\n請從「餘有榮焉官方帳號」的選單開啟訂購頁面，才能自動收到訂單確認訊息。\n\n您的訂單已成立✅，請截圖保留訂單編號。');
+      } else {
+        alert('⚠️ LINE 訂單通知發送失敗（' + (e.code || e.message) + '）\n\n您的訂單已成立✅，請截圖保留訂單編號。');
+      }
     }
   }
 
