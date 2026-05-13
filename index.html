@@ -265,7 +265,7 @@
       </div>
       <div class="field" style="margin-bottom:15px;">
         <label>手機號碼</label>
-        <input type="tel" id="phone" placeholder="09XX-XXX-XXX">
+        <input type="tel" id="phone" placeholder="09XX-XXX-XXX" maxlength="10">
       </div>
       <div class="field" id="address-section" style="margin-bottom:15px;display:none;">
         <label>宅配地址</label>
@@ -520,6 +520,14 @@
       return;
     }
     if (!name || !phone) { alert('請填寫姓名和電話'); return; }
+
+    // 加在這裡 ↓
+    var cleanPhone = phone.replace(/[\s\-]/g, ''); // 容許顧客輸入 09XX-XXX-XXX 或 09XXXXXXXX
+    if (!/^09\d{8}$/.test(cleanPhone)) {
+      alert('手機號碼格式不正確，請填寫 09 開頭的 10 碼號碼');
+      return;
+    }
+    phone = cleanPhone; // 統一存成 09XXXXXXXX 格式
     if (deliveryType === '宅配' && !address) { alert('請填寫宅配地址'); return; }
 
     var shipping = calcShipping();
