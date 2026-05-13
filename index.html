@@ -396,23 +396,24 @@
   // ── 取貨方式切換
   // 【修正1】切換時先把所有 input 的即時值同步回 qtys，
   //          再執行自取限定清零，避免殘留數值被帶入。
+  
   function setDelivery(type) {
-    // 先將目前 DOM 值同步回 qtys（防止 oninput 還沒觸發的邊界情況）
-    for (var j = 0; j < 5; j++) {
-      var v = parseInt(document.getElementById('qty-' + j).value, 10);
-      qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
-    }
-
-    deliveryType = type;
-    document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
-    document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
-    document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
-    document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
-    document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
-
-    updateSpecVisibility(); // 內含清零與 syncUI
-    updatePriceDisplay();
+  // 切換時全部清零
+  for (var j = 0; j < 5; j++) {
+    qtys[j] = 0;
+    syncUI(j);
   }
+
+  deliveryType = type;
+  document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
+  document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
+  document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
+  document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
+  document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
+
+  updateSpecVisibility();
+  updatePriceDisplay();
+}
 
   // ── 顯示/隱藏自取限定規格，切宅配時強制清零
   // 【關鍵】用明確 ID 控制 display，不依賴 querySelectorAll('.pickup-only')
