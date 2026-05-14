@@ -30,7 +30,6 @@
       margin-bottom: 16px; box-shadow: 0 8px 24px rgba(149,157,165,0.1);
     }
     .card h2 { font-size: 16px; color: var(--peach-main); margin-bottom: 16px; }
-
     /* 取貨切換 */
     .delivery-toggle {
       display: flex; gap: 10px; background: #F0F0F0;
@@ -45,19 +44,54 @@
       background: white; color: var(--peach-main); font-weight: bold;
       box-shadow: 0 2px 8px rgba(255,138,138,0.15);
     }
-
     /* 規格卡片 */
     .spec-card {
       border: 1px solid #EEE; border-radius: 14px;
       padding: 16px; margin-bottom: 12px; transition: 0.3s;
     }
     .spec-card.has-qty { border-color: var(--peach-main); background: var(--peach-light); }
+
+    /* ── 已完售樣式 ── */
+    .spec-card.soldout {
+      border-color: #DDD;
+      background: #F5F5F5;
+      opacity: 0.7;
+      pointer-events: none; /* 整張卡片不可互動 */
+    }
+    .spec-card.soldout .spec-name { color: #AAA; }
+    .spec-card.soldout .spec-price { color: #BBB; }
+    .soldout-badge {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      color: #fff;
+      background: #AAAAAA;
+      border-radius: 6px;
+      padding: 2px 8px;
+      margin-left: 8px;
+      vertical-align: middle;
+      letter-spacing: 1px;
+    }
+    .qty-control.soldout-ctrl {
+      opacity: 0.4;
+    }
+    .qty-input.soldout-input {
+      background: #EEE;
+      color: #AAA;
+      border-color: #DDD;
+    }
+    .qty-btn.soldout-btn {
+      background: #EEE;
+      color: #BBB;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    /* ── end 已完售 ── */
+
     .spec-header {
       display: flex; justify-content: space-between; align-items: center;
     }
     .spec-name  { font-size: 16px; font-weight: 600; }
     .spec-price { font-size: 15px; color: var(--peach-main); font-weight: 700; }
-
     /* 數量控制 */
     .qty-control { display: flex; align-items: center; gap: 10px; }
     .qty-btn {
@@ -78,14 +112,12 @@
     .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .qty-input:focus { outline: none; border-color: var(--peach-main); }
     .spec-card.has-qty .qty-input { border-color: var(--peach-main); color: var(--peach-main); }
-
     /* 自取提示標籤 */
     .pickup-tag {
       display: inline-block; font-size: 11px; color: #fff;
       background: var(--peach-main); border-radius: 6px;
       padding: 1px 7px; margin-left: 6px; vertical-align: middle; opacity: 0.85;
     }
-
     /* 收件資訊欄位 */
     .field label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; display: block; }
     input[type="text"], input[type="tel"], textarea {
@@ -97,7 +129,6 @@
     input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
       outline: none; border-color: var(--peach-main);
     }
-
     /* 自取地點卡片 */
     .pickup-info {
       background: #FFF8F8; border: 1px dashed #FFBABA;
@@ -105,7 +136,6 @@
       font-size: 13px; color: #888; line-height: 1.8;
     }
     .pickup-info b { color: var(--peach-main); }
-
     /* 金額顯示 */
     .price-display { background: #333; color: #EEE; border-radius: 16px; padding: 20px; margin-top: 10px; }
     .price-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
@@ -114,7 +144,6 @@
       font-size: 20px; font-weight: bold; color: white;
       border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-top: 8px;
     }
-
     /* 送出按鈕 */
     .submit-btn {
       width: 100%; padding: 18px; background: var(--peach-main);
@@ -124,7 +153,6 @@
     }
     .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .peach-down { display: inline-block; transform: rotate(180deg); }
-
     /* 成功畫面 */
     #success-screen {
       display: none; min-height: 100vh;
@@ -154,16 +182,13 @@
   </style>
 </head>
 <body>
-
 <!-- 訂購主畫面 -->
 <div id="main-screen">
   <div class="header">
     <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 紅鈴水蜜桃</h1>
     <p>果園產地直送 ‧ 享受清甜滋味</p>
   </div>
-
   <div class="container">
-
     <!-- 取貨方式 -->
     <div class="card">
       <h2>取貨方式</h2>
@@ -176,11 +201,9 @@
         </button>
       </div>
     </div>
-
     <!-- 規格選擇 -->
     <div class="card">
       <h2>挑選規格</h2>
-
       <div class="spec-card pickup-only" id="spec-card-0">
         <div class="spec-header">
           <div>
@@ -194,7 +217,6 @@
           </div>
         </div>
       </div>
-
       <div class="spec-card pickup-only" id="spec-card-1">
         <div class="spec-header">
           <div>
@@ -209,16 +231,20 @@
         </div>
       </div>
 
-      <div class="spec-card" id="spec-card-2">
+      <!-- ★ 禮盒大6顆：已完售，無法下單 ★ -->
+      <div class="spec-card soldout" id="spec-card-2">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F381; 禮盒大6顆</div>
-            <div class="spec-price">NT$ 500 / 盒</div>
+            <div class="spec-name">
+              &#x1F381; 禮盒大6顆
+              <span class="soldout-badge">已完售</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 500 / 盒</div>
           </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(2,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-2" value="0" min="0" oninput="inputQty(2,this.value)">
-            <button class="qty-btn" onclick="stepQty(2,1)">+</button>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-2" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
           </div>
         </div>
       </div>
@@ -236,7 +262,6 @@
           </div>
         </div>
       </div>
-
       <div class="spec-card" id="spec-card-4">
         <div class="spec-header">
           <div>
@@ -250,12 +275,10 @@
           </div>
         </div>
       </div>
-
       <p id="empty-warning" style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
         別忘了選購好吃的水蜜桃喔！
       </p>
     </div>
-
     <!-- 收件資訊 -->
     <div class="card">
       <h2>收件資訊</h2>
@@ -292,76 +315,64 @@
         <textarea id="note" rows="2" placeholder="如需指定到貨日期或其他需求請在此填寫"></textarea>
       </div>
     </div>
-
     <!-- 金額顯示 -->
     <div class="price-display" id="price-display">
       <div class="price-total"><span>總計金額</span><span>NT$ 0</span></div>
     </div>
-
     <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
       確認送出訂單
     </button>
-
   </div>
 </div>
-
 <!-- 訂單成功畫面 -->
 <div id="success-screen">
   <div class="success-icon">🎉</div>
   <div class="success-title">訂單成立囉！</div>
   <div class="success-sub">感謝您的訂購，我們會盡快為您準備</div>
-
   <div class="order-summary-card" id="success-summary">
     <!-- 動態填入 -->
   </div>
-
   <button class="back-btn" onclick="location.reload()">繼續訂購</button>
 </div>
-
 <script>
   var LIFF_ID  = '2009767596-jd7WjD99';
   var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
   var SHIPPING_PER_BOX = 290;
-  // 自取地點（顯示於通知與成功頁）
   var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
-
   var SPECS = [
-    { name: '特2顆',        price: 150, pickupOnly: true  },
-    { name: '特4顆',        price: 200, pickupOnly: true  },
-    { name: '禮盒大6顆',    price: 500, pickupOnly: false },
-    { name: '禮盒大8顆',    price: 450, pickupOnly: false },
-    { name: '家庭盒中16顆', price: 400, pickupOnly: false }
+    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: false },
+    { name: '特4顆',        price: 200, pickupOnly: true,  soldout: false },
+    { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  }, // ★ 已完售
+    { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: false },
+    { name: '家庭盒中16顆', price: 400, pickupOnly: false, soldout: false }
   ];
-
   var qtys = [0, 0, 0, 0, 0];
   var deliveryType = '自取';
   var lineName = '';
   var lineUserId = '';
 
-  // ── 把 qtys[idx] 寫回畫面
-  // 【關鍵】className 只負責樣式（has-qty），display 由 updateSpecVisibility 獨立管理
-  //         不在 syncUI 裡碰 display，避免蓋掉隱藏狀態
   function syncUI(idx) {
     var el = document.getElementById('qty-' + idx);
     el.value = qtys[idx];
     var card = document.getElementById('spec-card-' + idx);
-    // 保留現有 class，只切換 has-qty
+    // 已完售的卡片不改 class（保留 soldout 樣式）
+    if (SPECS[idx].soldout) return;
     var classes = ['spec-card'];
     if (SPECS[idx].pickupOnly) classes.push('pickup-only');
     if (qtys[idx] > 0) classes.push('has-qty');
     card.className = classes.join(' ');
   }
 
-  // ── +/- 按鈕
   function stepQty(idx, delta) {
+    if (SPECS[idx].soldout) return; // 已完售：忽略操作
     qtys[idx] = Math.max(0, qtys[idx] + delta);
     syncUI(idx);
     document.getElementById('empty-warning').style.display = 'none';
     updatePriceDisplay();
   }
 
-  // ── 直接輸入
   function inputQty(idx, val) {
+    if (SPECS[idx].soldout) return; // 已完售：忽略操作
     var n = parseInt(val, 10);
     qtys[idx] = (isNaN(n) || n < 0) ? 0 : n;
     var card = document.getElementById('spec-card-' + idx);
@@ -373,7 +384,6 @@
     updatePriceDisplay();
   }
 
-  // ── LIFF 初始化
   async function init() {
     try {
       if (typeof liff === 'undefined') {
@@ -396,49 +406,36 @@
     updatePriceDisplay();
   }
 
-  // ── 取貨方式切換
-  // 【修正1】切換時先把所有 input 的即時值同步回 qtys，
-  //          再執行自取限定清零，避免殘留數值被帶入。
-  
   function setDelivery(type) {
-  // 切換時全部清零
-  for (var j = 0; j < 5; j++) {
-    qtys[j] = 0;
-    syncUI(j);
+    for (var j = 0; j < 5; j++) {
+      qtys[j] = 0;
+      syncUI(j);
+    }
+    deliveryType = type;
+    document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
+    document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
+    document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
+    document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
+    document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
+    updateSpecVisibility();
+    updatePriceDisplay();
   }
 
-  deliveryType = type;
-  document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
-  document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
-  document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
-  document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
-  document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
-
-  updateSpecVisibility();
-  updatePriceDisplay();
-}
-
-  // ── 顯示/隱藏自取限定規格，切宅配時強制清零
-  // 【關鍵】用明確 ID 控制 display，不依賴 querySelectorAll('.pickup-only')
-  //         避免 syncUI 重建 className 時遺失 display:none
-  var PICKUP_ONLY_IDS = [0, 1]; // 自取限定的規格索引
+  var PICKUP_ONLY_IDS = [0, 1];
   function updateSpecVisibility() {
     var isPickup = deliveryType === '自取';
     PICKUP_ONLY_IDS.forEach(function(idx) {
       document.getElementById('spec-card-' + idx).style.display = isPickup ? 'block' : 'none';
     });
     if (!isPickup) {
-      // 切到宅配：強制清零自取限定，並同步畫面
       PICKUP_ONLY_IDS.forEach(function(idx) {
         qtys[idx] = 0;
         syncUI(idx);
-        // 確保 display:none 不被 syncUI 蓋掉
         document.getElementById('spec-card-' + idx).style.display = 'none';
       });
     }
   }
 
-  // ── 運費計算
   function calcShipping() {
     if (deliveryType !== '宅配') return 0;
     var boxes = qtys[2] + qtys[3] + qtys[4];
@@ -446,11 +443,11 @@
     return Math.ceil(boxes / 2) * SHIPPING_PER_BOX;
   }
 
-  // ── 金額顯示更新
   function updatePriceDisplay() {
     var html = '';
     var subtotal = 0;
     for (var i = 0; i < SPECS.length; i++) {
+      if (SPECS[i].soldout) continue; // 已完售不計入金額
       if (qtys[i] <= 0) continue;
       var amount = qtys[i] * SPECS[i].price;
       subtotal += amount;
@@ -465,29 +462,22 @@
     document.getElementById('price-display').innerHTML = html;
   }
 
-  // ── 匯款資訊
   var BANK_INFO = {
     name: '渣打銀行',
     code: '520',
     account: '02020000492573'
   };
 
- 
-
-  // ── 顯示成功畫面
   function showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address) {
     document.getElementById('main-screen').style.display = 'none';
     var screen = document.getElementById('success-screen');
     screen.style.display = 'block';
-
     var locationHtml = deliveryType === '自取'
       ? '<div class="order-row"><span class="label">自取地點</span><span class="value">' + PICKUP_ADDRESS + '</span></div>'
       : '<div class="order-row"><span class="label">宅配地址</span><span class="value">' + address + '</span></div>';
-
     var shippingHtml = shipping > 0
       ? '<div class="order-row"><span class="label">冷藏運費</span><span class="value">NT$ ' + shipping + '</span></div>'
       : '';
-
     document.getElementById('success-summary').innerHTML =
       '<h3>🧾 訂單明細</h3>' +
       '<div class="order-row"><span class="label">訂單編號</span><span class="value">' + orderId + '</span></div>' +
@@ -499,19 +489,18 @@
       '<div class="order-total-row"><span>應付總金額</span><span class="value">NT$ ' + totalAmount + '</span></div>';
   }
 
-  // ── 送出訂單
   async function submitOrder() {
     var name    = document.getElementById('name').value.trim();
     var phone   = document.getElementById('phone').value.trim();
     var address = document.getElementById('address').value.trim();
     var note    = document.getElementById('note').value.trim();
 
-    // 送出前再從 input 同步一次 qtys
     for (var j = 0; j < 5; j++) {
+      if (SPECS[j].soldout) { qtys[j] = 0; continue; } // 已完售強制歸零
       var v = parseInt(document.getElementById('qty-' + j).value, 10);
       qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
     }
-    // 宅配時再次確保自取限定為零（雙重保險）
+
     if (deliveryType === '宅配') {
       qtys[0] = 0;
       qtys[1] = 0;
@@ -524,21 +513,25 @@
     }
     if (!name || !phone) { alert('請填寫姓名和電話'); return; }
 
-    // 加在這裡 ↓
-    var cleanPhone = phone.replace(/[\s\-]/g, ''); // 容許顧客輸入 09XX-XXX-XXX 或 09XXXXXXXX
+    var cleanPhone = phone.replace(/[\s\-]/g, '');
     if (!/^09\d{8}$/.test(cleanPhone)) {
       alert('手機號碼格式不正確，請填寫 09 開頭的 10 碼號碼');
       return;
     }
-    phone = cleanPhone; // 統一存成 09XXXXXXXX 格式
+    phone = cleanPhone;
+
     if (deliveryType === '宅配' && !address) { alert('請填寫宅配地址'); return; }
 
     var shipping = calcShipping();
     var subtotal = 0;
-    for (var i = 0; i < SPECS.length; i++) { subtotal += qtys[i] * SPECS[i].price; }
+    for (var i = 0; i < SPECS.length; i++) {
+      if (SPECS[i].soldout) continue;
+      subtotal += qtys[i] * SPECS[i].price;
+    }
     var totalAmount = subtotal + shipping;
 
     var specSummary = SPECS.map(function(s, i) {
+      if (s.soldout) return null;
       return qtys[i] > 0 ? s.name + ' x' + qtys[i] : null;
     }).filter(Boolean).join('、');
 
@@ -564,13 +557,10 @@
         address: address || '自取（' + PICKUP_ADDRESS + '）',
         note: note || ''
       });
-
       var res    = await fetch(API_URL + '?' + params.toString());
       var result = await res.json();
-
       if (result.status === 'success') {
-        var orderId = result.orderId; // 使用後端產生的正式訂單編號
-        
+        var orderId = result.orderId;
         showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
       } else {
         throw new Error('API returned non-success status');
