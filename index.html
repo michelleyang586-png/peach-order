@@ -204,19 +204,25 @@
     <!-- 規格選擇 -->
     <div class="card">
       <h2>挑選規格</h2>
-      <div class="spec-card pickup-only" id="spec-card-0">
+
+      <!-- ★ 特2顆：已完售，無法下單 ★ -->
+      <div class="spec-card soldout pickup-only" id="spec-card-0">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F351; 特2顆<span class="pickup-tag">自取限定</span></div>
-            <div class="spec-price">NT$ 150 / 盒</div>
+            <div class="spec-name">
+              &#x1F351; 特2顆<span class="pickup-tag">自取限定</span>
+              <span class="soldout-badge">已完售</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 150 / 盒</div>
           </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(0,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-0" value="0" min="0" oninput="inputQty(0,this.value)">
-            <button class="qty-btn" onclick="stepQty(0,1)">+</button>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-0" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
           </div>
         </div>
       </div>
+
       <div class="spec-card pickup-only" id="spec-card-1">
         <div class="spec-header">
           <div>
@@ -340,7 +346,7 @@
   var SHIPPING_PER_BOX = 290;
   var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
   var SPECS = [
-    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: false },
+    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: true  }, // ★ 已完售
     { name: '特4顆',        price: 200, pickupOnly: true,  soldout: false },
     { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  }, // ★ 已完售
     { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: false },
