@@ -30,6 +30,7 @@
       margin-bottom: 16px; box-shadow: 0 8px 24px rgba(149,157,165,0.1);
     }
     .card h2 { font-size: 16px; color: var(--peach-main); margin-bottom: 16px; }
+    /* 取貨切換 */
     .delivery-toggle {
       display: flex; gap: 10px; background: #F0F0F0;
       padding: 4px; border-radius: 12px;
@@ -43,28 +44,55 @@
       background: white; color: var(--peach-main); font-weight: bold;
       box-shadow: 0 2px 8px rgba(255,138,138,0.15);
     }
+    /* 規格卡片 */
     .spec-card {
       border: 1px solid #EEE; border-radius: 14px;
       padding: 16px; margin-bottom: 12px; transition: 0.3s;
     }
     .spec-card.has-qty { border-color: var(--peach-main); background: var(--peach-light); }
+
+    /* ── 已完售樣式 ── */
     .spec-card.soldout {
-      border-color: #DDD; background: #F5F5F5;
-      opacity: 0.7; pointer-events: none;
+      border-color: #DDD;
+      background: #F5F5F5;
+      opacity: 0.7;
+      pointer-events: none; /* 整張卡片不可互動 */
     }
     .spec-card.soldout .spec-name { color: #AAA; }
     .spec-card.soldout .spec-price { color: #BBB; }
     .soldout-badge {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      color: #fff; background: #AAAAAA; border-radius: 6px;
-      padding: 2px 8px; margin-left: 8px; vertical-align: middle; letter-spacing: 1px;
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      color: #fff;
+      background: #AAAAAA;
+      border-radius: 6px;
+      padding: 2px 8px;
+      margin-left: 8px;
+      vertical-align: middle;
+      letter-spacing: 1px;
     }
-    .qty-control.soldout-ctrl { opacity: 0.4; }
-    .qty-input.soldout-input { background: #EEE; color: #AAA; border-color: #DDD; }
-    .qty-btn.soldout-btn { background: #EEE; color: #BBB; box-shadow: none; cursor: not-allowed; }
-    .spec-header { display: flex; justify-content: space-between; align-items: center; }
+    .qty-control.soldout-ctrl {
+      opacity: 0.4;
+    }
+    .qty-input.soldout-input {
+      background: #EEE;
+      color: #AAA;
+      border-color: #DDD;
+    }
+    .qty-btn.soldout-btn {
+      background: #EEE;
+      color: #BBB;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    /* ── end 已完售 ── */
+
+    .spec-header {
+      display: flex; justify-content: space-between; align-items: center;
+    }
     .spec-name  { font-size: 16px; font-weight: 600; }
     .spec-price { font-size: 15px; color: var(--peach-main); font-weight: 700; }
+    /* 數量控制 */
     .qty-control { display: flex; align-items: center; gap: 10px; }
     .qty-btn {
       width: 32px; height: 32px; border-radius: 10px; border: none;
@@ -74,7 +102,8 @@
     .qty-input {
       width: 44px; height: 36px;
       border: 1.5px solid #DDD; border-radius: 8px;
-      background: white; font-size: 17px; font-weight: bold; color: #444;
+      background: white;
+      font-size: 17px; font-weight: bold; color: #444;
       text-align: center; padding: 0;
       font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
       -moz-appearance: textfield;
@@ -83,11 +112,13 @@
     .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .qty-input:focus { outline: none; border-color: var(--peach-main); }
     .spec-card.has-qty .qty-input { border-color: var(--peach-main); color: var(--peach-main); }
+    /* 自取提示標籤 */
     .pickup-tag {
       display: inline-block; font-size: 11px; color: #fff;
       background: var(--peach-main); border-radius: 6px;
       padding: 1px 7px; margin-left: 6px; vertical-align: middle; opacity: 0.85;
     }
+    /* 收件資訊欄位 */
     .field label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; display: block; }
     input[type="text"], input[type="tel"], textarea {
       background: #F9F9F9; border: 1px solid #EDEDED;
@@ -98,12 +129,14 @@
     input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
       outline: none; border-color: var(--peach-main);
     }
+    /* 自取地點卡片 */
     .pickup-info {
       background: #FFF8F8; border: 1px dashed #FFBABA;
       border-radius: 12px; padding: 14px; margin-top: 12px;
       font-size: 13px; color: #888; line-height: 1.8;
     }
     .pickup-info b { color: var(--peach-main); }
+    /* 金額顯示 */
     .price-display { background: #333; color: #EEE; border-radius: 16px; padding: 20px; margin-top: 10px; }
     .price-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
     .price-total {
@@ -111,6 +144,7 @@
       font-size: 20px; font-weight: bold; color: white;
       border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-top: 8px;
     }
+    /* 送出按鈕 */
     .submit-btn {
       width: 100%; padding: 18px; background: var(--peach-main);
       color: white; border: none; border-radius: 18px;
@@ -127,17 +161,7 @@
     }
     .success-icon { font-size: 64px; margin-bottom: 16px; }
     .success-title { font-size: 22px; font-weight: bold; color: white; margin-bottom: 8px; }
-    .success-sub { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 16px; }
-    /* ── 截圖提示區塊 ── */
-    .screenshot-hint {
-      background: rgba(255,255,255,0.25);
-      border: 1.5px dashed rgba(255,255,255,0.6);
-      border-radius: 12px; padding: 12px 16px;
-      margin-bottom: 20px; font-size: 13px;
-      color: white; line-height: 1.9; text-align: left;
-    }
-    .screenshot-hint strong { font-size: 14px; display: block; margin-bottom: 2px; }
-    /* ── end 截圖提示 ── */
+    .success-sub { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
     .order-summary-card {
       background: white; border-radius: 18px; padding: 20px;
       text-align: left; margin-bottom: 20px;
@@ -181,6 +205,7 @@
     <div class="card">
       <h2>挑選規格</h2>
 
+      <!-- ★ 特2顆：已完售，無法下單 ★ -->
       <div class="spec-card soldout pickup-only" id="spec-card-0">
         <div class="spec-header">
           <div>
@@ -212,6 +237,7 @@
         </div>
       </div>
 
+      <!-- ★ 禮盒大6顆：已完售，無法下單 ★ -->
       <div class="spec-card soldout" id="spec-card-2">
         <div class="spec-header">
           <div>
@@ -242,7 +268,6 @@
           </div>
         </div>
       </div>
-
       <div class="spec-card" id="spec-card-4">
         <div class="spec-header">
           <div>
@@ -256,7 +281,6 @@
           </div>
         </div>
       </div>
-
       <p id="empty-warning" style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
         別忘了選購好吃的水蜜桃喔！
       </p>
@@ -276,12 +300,22 @@
         <label>宅配地址</label>
         <input type="text" id="address" placeholder="完整收件地址">
       </div>
+      <!-- 自取地點資訊（自取時顯示）-->
       <div id="pickup-info-section" class="pickup-info">
         📍 <b>自取地點：</b>苗栗縣公館鄉館東村<br>
         🕐 <b>取貨時間：</b>每日 09:00 – 17:00，請先電話聯絡<br>
         🍑 預計5月底開始採收，屆時將陸續出貨<br>
-        📞 如需調整取貨時間請提前聯繫，聯絡電話：羅小姐0972-211755<br>
+        📞 聯絡電話：羅小姐 0972-211755<br>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #FFBABA;">
+          💰 <b>付款方式（擇一）</b><br>
+          &nbsp;&nbsp;✅ 現場取貨時付款<br>
+          &nbsp;&nbsp;✅ 先行轉帳，憑轉帳紀錄取貨<br>
+          🏦 <b>匯款資訊：</b>渣打銀行（520）<br>
+          &nbsp;&nbsp;帳號：<b style="color:#444; letter-spacing:1px;">0202-000-049-2573</b><br>
+          &nbsp;&nbsp;轉帳後通知line官方，會同步更新匯款資訊。
+        </div>
       </div>
+      <!-- 宅配備註（宅配時顯示）-->
       <div id="delivery-info-section" class="pickup-info" style="display:none; border-color:#B8DAFF; background:#F0F7FF;">
         ❄️ <b>黑貓冷藏宅配說明：</b><br>
         🍑 預計5月底開始採收，屆時將陸續出貨<br>
@@ -304,34 +338,25 @@
     </button>
   </div>
 </div>
-
 <!-- 訂單成功畫面 -->
 <div id="success-screen">
   <div class="success-icon">🎉</div>
   <div class="success-title">訂單成立囉！</div>
   <div class="success-sub">感謝您的訂購，我們會盡快為您準備</div>
-
-  <!-- ── 截圖提示 ── -->
-  <div class="screenshot-hint">
-    <strong>📸 請截圖保存此頁面作為訂購紀錄</strong>
-    如有問題請聯繫：羅小姐 0972-211755
-  </div>
-
   <div class="order-summary-card" id="success-summary">
     <!-- 動態填入 -->
   </div>
   <button class="back-btn" onclick="location.reload()">繼續訂購</button>
 </div>
-
 <script>
   var LIFF_ID  = '2009767596-jd7WjD99';
   var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
   var SHIPPING_PER_BOX = 290;
   var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
   var SPECS = [
-    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: true  },
+    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: true  }, // ★ 已完售
     { name: '特4顆',        price: 200, pickupOnly: true,  soldout: false },
-    { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  },
+    { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  }, // ★ 已完售
     { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: false },
     { name: '家庭盒中16顆', price: 400, pickupOnly: false, soldout: false }
   ];
@@ -344,6 +369,7 @@
     var el = document.getElementById('qty-' + idx);
     el.value = qtys[idx];
     var card = document.getElementById('spec-card-' + idx);
+    // 已完售的卡片不改 class（保留 soldout 樣式）
     if (SPECS[idx].soldout) return;
     var classes = ['spec-card'];
     if (SPECS[idx].pickupOnly) classes.push('pickup-only');
@@ -352,7 +378,7 @@
   }
 
   function stepQty(idx, delta) {
-    if (SPECS[idx].soldout) return;
+    if (SPECS[idx].soldout) return; // 已完售：忽略操作
     qtys[idx] = Math.max(0, qtys[idx] + delta);
     syncUI(idx);
     document.getElementById('empty-warning').style.display = 'none';
@@ -360,7 +386,7 @@
   }
 
   function inputQty(idx, val) {
-    if (SPECS[idx].soldout) return;
+    if (SPECS[idx].soldout) return; // 已完售：忽略操作
     var n = parseInt(val, 10);
     qtys[idx] = (isNaN(n) || n < 0) ? 0 : n;
     var card = document.getElementById('spec-card-' + idx);
@@ -435,7 +461,7 @@
     var html = '';
     var subtotal = 0;
     for (var i = 0; i < SPECS.length; i++) {
-      if (SPECS[i].soldout) continue;
+      if (SPECS[i].soldout) continue; // 已完售不計入金額
       if (qtys[i] <= 0) continue;
       var amount = qtys[i] * SPECS[i].price;
       subtotal += amount;
@@ -449,6 +475,12 @@
     html += '<div class="price-total"><span>總計金額</span><span>NT$ ' + total + '</span></div>';
     document.getElementById('price-display').innerHTML = html;
   }
+
+  var BANK_INFO = {
+    name: '渣打銀行',
+    code: '520',
+    account: '02020000492573'
+  };
 
   function showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address) {
     document.getElementById('main-screen').style.display = 'none';
@@ -478,7 +510,7 @@
     var note    = document.getElementById('note').value.trim();
 
     for (var j = 0; j < 5; j++) {
-      if (SPECS[j].soldout) { qtys[j] = 0; continue; }
+      if (SPECS[j].soldout) { qtys[j] = 0; continue; } // 已完售強制歸零
       var v = parseInt(document.getElementById('qty-' + j).value, 10);
       qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
     }
@@ -542,7 +574,8 @@
       var res    = await fetch(API_URL + '?' + params.toString());
       var result = await res.json();
       if (result.status === 'success') {
-        showSuccessScreen(result.orderId, name, specSummary, totalAmount, shipping, address);
+        var orderId = result.orderId;
+        showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
       } else {
         throw new Error('API returned non-success status');
       }
