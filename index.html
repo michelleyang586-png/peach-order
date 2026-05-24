@@ -1,255 +1,571 @@
-const LINE_TOKEN = '2pgUy78YYeH/bf+gL4MyCWxiQYA2XtFUPzWwIigkRj3/JBHy5Ee6Z92uOBkTYgo9kZYp5mBCfLybgd9VVLLb7hTPqb9VE2Q2d1lYMVPV3euPtDKYEuinsN0LcuxXCtpm9MIS9dLqvVphxhCTETYZmAdB04t89/1O/w1cDnyilFU=';
-const ADMIN_USER_ID = 'Uf86482255e83a7bcd1b70e70a50aef76';
-const SPREADSHEET_ID = '1gKxDE7T_XUt2yPWXsagBQC8FYF0xQVD3jVmdi8dqF7I';
-const PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>餘有榮焉｜水蜜桃訂購</title>
+  <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+  <style>
+    :root {
+      --peach-main: #FF8A8A;
+      --peach-light: #FFF0F0;
+      --bg-color: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg-color); color: #444; line-height: 1.5;
+    }
+    .header {
+      background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
+      color: white; padding: 40px 20px; text-align: center;
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 15px rgba(255,138,138,0.3);
+    }
+    .header h1 { font-size: 24px; letter-spacing: 1px; }
+    .header p  { font-size: 14px; margin-top: 8px; opacity: 0.9; }
+    .container { padding: 20px 16px; max-width: 500px; margin: -20px auto 0; }
+    .card {
+      background: white; border-radius: 18px; padding: 20px;
+      margin-bottom: 16px; box-shadow: 0 8px 24px rgba(149,157,165,0.1);
+    }
+    .card h2 { font-size: 16px; color: var(--peach-main); margin-bottom: 16px; }
+    .delivery-toggle {
+      display: flex; gap: 10px; background: #F0F0F0;
+      padding: 4px; border-radius: 12px;
+    }
+    .delivery-btn {
+      flex: 1; padding: 10px; border: none; border-radius: 10px;
+      background: transparent; font-size: 14px; cursor: pointer; color: #777;
+      transition: all 0.2s;
+    }
+    .delivery-btn.active {
+      background: white; color: var(--peach-main); font-weight: bold;
+      box-shadow: 0 2px 8px rgba(255,138,138,0.15);
+    }
+    .spec-card {
+      border: 1px solid #EEE; border-radius: 14px;
+      padding: 16px; margin-bottom: 12px; transition: 0.3s;
+    }
+    .spec-card.has-qty { border-color: var(--peach-main); background: var(--peach-light); }
+    .spec-card.soldout {
+      border-color: #DDD; background: #F5F5F5;
+      opacity: 0.7; pointer-events: none;
+    }
+    .spec-card.soldout .spec-name { color: #AAA; }
+    .spec-card.soldout .spec-price { color: #BBB; }
+    .soldout-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: #fff; background: #AAAAAA; border-radius: 6px;
+      padding: 2px 8px; margin-left: 8px; vertical-align: middle; letter-spacing: 1px;
+    }
+    .qty-control.soldout-ctrl { opacity: 0.4; }
+    .qty-input.soldout-input { background: #EEE; color: #AAA; border-color: #DDD; }
+    .qty-btn.soldout-btn { background: #EEE; color: #BBB; box-shadow: none; cursor: not-allowed; }
+    .spec-header { display: flex; justify-content: space-between; align-items: center; }
+    .spec-name  { font-size: 16px; font-weight: 600; }
+    .spec-price { font-size: 15px; color: var(--peach-main); font-weight: 700; }
+    .qty-control { display: flex; align-items: center; gap: 10px; }
+    .qty-btn {
+      width: 32px; height: 32px; border-radius: 10px; border: none;
+      background: white; color: var(--peach-main); font-size: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer; flex-shrink: 0;
+    }
+    .qty-input {
+      width: 44px; height: 36px;
+      border: 1.5px solid #DDD; border-radius: 8px;
+      background: white; font-size: 17px; font-weight: bold; color: #444;
+      text-align: center; padding: 0;
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      -moz-appearance: textfield;
+    }
+    .qty-input::-webkit-inner-spin-button,
+    .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .qty-input:focus { outline: none; border-color: var(--peach-main); }
+    .spec-card.has-qty .qty-input { border-color: var(--peach-main); color: var(--peach-main); }
+    .pickup-tag {
+      display: inline-block; font-size: 11px; color: #fff;
+      background: var(--peach-main); border-radius: 6px;
+      padding: 1px 7px; margin-left: 6px; vertical-align: middle; opacity: 0.85;
+    }
+    .field label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; display: block; }
+    input[type="text"], input[type="tel"], textarea {
+      background: #F9F9F9; border: 1px solid #EDEDED;
+      padding: 14px; border-radius: 12px; font-size: 15px; width: 100%;
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
+      outline: none; border-color: var(--peach-main);
+    }
+    .pickup-info {
+      background: #FFF8F8; border: 1px dashed #FFBABA;
+      border-radius: 12px; padding: 14px; margin-top: 12px;
+      font-size: 13px; color: #888; line-height: 1.8;
+    }
+    .pickup-info b { color: var(--peach-main); }
+    .price-display { background: #333; color: #EEE; border-radius: 16px; padding: 20px; margin-top: 10px; }
+    .price-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
+    .price-total {
+      display: flex; justify-content: space-between;
+      font-size: 20px; font-weight: bold; color: white;
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-top: 8px;
+    }
+    .submit-btn {
+      width: 100%; padding: 18px; background: var(--peach-main);
+      color: white; border: none; border-radius: 18px;
+      font-size: 17px; font-weight: bold; margin: 20px 0 40px; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .peach-down { display: inline-block; transform: rotate(180deg); }
+    #success-screen {
+      display: none; min-height: 100vh;
+      background: linear-gradient(145deg, #FF9A9E 0%, #FAD0C4 100%);
+      padding: 40px 20px; text-align: center;
+    }
+    .success-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-title { font-size: 22px; font-weight: bold; color: white; margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
+    .order-summary-card {
+      background: white; border-radius: 18px; padding: 20px;
+      text-align: left; margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(149,157,165,0.15);
+    }
+    .order-summary-card h3 { font-size: 15px; color: var(--peach-main); margin-bottom: 14px; }
+    .order-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; border-bottom: 1px solid #F5F5F5; }
+    .order-row:last-child { border-bottom: none; }
+    .order-row .label { color: #999; }
+    .order-row .value { font-weight: 600; color: #444; text-align: right; max-width: 60%; }
+    .order-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; padding-top: 12px; margin-top: 4px; border-top: 2px solid #F0F0F0; }
+    .order-total-row .value { color: var(--peach-main); }
+    .success-bank-info {
+      margin-top: 16px; padding: 14px;
+      background: #FFF8F8; border: 1px dashed #FFBABA;
+      border-radius: 12px; font-size: 13px; color: #888; line-height: 2;
+      text-align: left;
+    }
+    .success-bank-info b { color: var(--peach-main); }
+    .back-btn {
+      background: white; color: var(--peach-main); border: none;
+      border-radius: 16px; padding: 16px 40px; font-size: 16px; font-weight: bold;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+<!-- 訂購主畫面 -->
+<div id="main-screen">
+  <div class="header">
+    <h1>餘有榮焉 <span class="peach-down">&#x1F351;</span> 紅鈴水蜜桃</h1>
+    <p>果園產地直送 ‧ 享受清甜滋味</p>
+  </div>
+  <div class="container">
+    <div class="card">
+      <h2>取貨方式</h2>
+      <div class="delivery-toggle">
+        <button class="delivery-btn active" onclick="setDelivery('自取')" id="btn-pickup">
+          &#x1F3EA; 現場自取
+        </button>
+        <button class="delivery-btn" onclick="setDelivery('宅配')" id="btn-delivery">
+          &#x2744;&#xFE0F; 黑貓冷藏宅配
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>挑選規格</h2>
+      <div class="spec-card soldout pickup-only" id="spec-card-0">
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">
+              &#x1F351; 特2顆<span class="pickup-tag">自取限定</span>
+              <span class="soldout-badge">已完售</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 150 / 盒</div>
+          </div>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-0" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card pickup-only" id="spec-card-1">
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">&#x1F351; 特4顆<span class="pickup-tag">自取限定</span></div>
+            <div class="spec-price">NT$ 200 / 盒</div>
+          </div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="stepQty(1,-1)">&#x2212;</button>
+            <input class="qty-input" type="number" id="qty-1" value="0" min="0" oninput="inputQty(1,this.value)">
+            <button class="qty-btn" onclick="stepQty(1,1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card soldout" id="spec-card-2">
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">
+              &#x1F381; 禮盒大6顆
+              <span class="soldout-badge">已完售</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 500 / 盒</div>
+          </div>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-2" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card" id="spec-card-3">
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">&#x1F381; 禮盒大8顆</div>
+            <div class="spec-price">NT$ 450 / 盒</div>
+          </div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="stepQty(3,-1)">&#x2212;</button>
+            <input class="qty-input" type="number" id="qty-3" value="0" min="0" oninput="inputQty(3,this.value)">
+            <button class="qty-btn" onclick="stepQty(3,1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card" id="spec-card-4">
+        <div class="spec-header">
+          <div>
+            <div class="spec-name">&#x1F351; 家庭盒中16顆</div>
+            <div class="spec-price">NT$ 400 / 盒</div>
+          </div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="stepQty(4,-1)">&#x2212;</button>
+            <input class="qty-input" type="number" id="qty-4" value="0" min="0" oninput="inputQty(4,this.value)">
+            <button class="qty-btn" onclick="stepQty(4,1)">+</button>
+          </div>
+        </div>
+      </div>
+      <p id="empty-warning" style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
+        別忘了選購好吃的水蜜桃喔！
+      </p>
+    </div>
+    <div class="card">
+      <h2>收件資訊</h2>
+      <div class="field" style="margin-bottom:15px;">
+        <label>聯絡姓名</label>
+        <input type="text" id="name" placeholder="請填寫姓名">
+      </div>
+      <div class="field" style="margin-bottom:15px;">
+        <label>手機號碼</label>
+        <input type="tel" id="phone" placeholder="09XX-XXX-XXX" maxlength="10">
+      </div>
+      <div class="field" id="address-section" style="margin-bottom:15px;display:none;">
+        <label>宅配地址</label>
+        <input type="text" id="address" placeholder="完整收件地址">
+      </div>
+      <div id="pickup-info-section" class="pickup-info">
+        📍 <b>自取地點：</b>苗栗縣公館鄉館東村<br>
+        🕐 <b>取貨時間：</b>每日 09:00 – 17:00，請先電話聯絡<br>
+        🍑 預計5月底開始採收，屆時將陸續出貨<br>
+        📞 如需調整取貨時間請提前聯繫，聯絡電話：羅小姐0972-211755<br>
+      </div>
+      <div id="delivery-info-section" class="pickup-info" style="display:none; border-color:#B8DAFF; background:#F0F7FF;">
+        ❄️ <b>黑貓冷藏宅配說明：</b><br>
+        🍑 預計5月底開始採收，屆時將陸續出貨<br>
+        📞 聯絡電話：羅小姐0972-211755<br>
+        💳 請完成匯款後告知，<b style="color:#4A90D9;">依匯款順序出貨</b><br>
+        📦 冷藏配送，建議有人簽收<br>
+        🕐 出貨後約 1–2 個工作天到貨<br>
+      </div>
+      <div class="field" style="margin-top:15px;">
+        <label>備註需求</label>
+        <textarea id="note" rows="2" placeholder="如需指定到貨日期或其他需求請在此填寫"></textarea>
+      </div>
+    </div>
+    <div class="price-display" id="price-display">
+      <div class="price-total"><span>總計金額</span><span>NT$ 0</span></div>
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
+      確認送出訂單
+    </button>
+  </div>
+</div>
+<!-- 訂單成功畫面 -->
+<div id="success-screen">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">訂單成立囉！</div>
+  <div class="success-sub">感謝您的訂購，我們會盡快為您準備</div>
+  <div style="background:rgba(255,255,255,0.25); border:1.5px dashed rgba(255,255,255,0.7); border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:white; line-height:1.9; text-align:left;">
+    📸 <b>請截圖保存此頁面作為訂購紀錄</b><br>
+    系統不會另外發送訂單通知，截圖即為您的訂單憑證<br>
+    如有問題請聯繫：羅小姐 0972-211755
+  </div>
+  <div class="order-summary-card" id="success-summary">
+    <!-- 動態填入 -->
+  </div>
+  <button class="back-btn" onclick="location.reload()">繼續訂購</button>
+</div>
+<script>
+  var LIFF_ID  = '2009767596-jd7WjD99';
+  var API_URL  = 'https://peach-api-indol.vercel.app/api/order';
+  var SHIPPING_PER_BOX = 290;
+  var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
+  var SPECS = [
+    { name: '特2顆',        price: 150, pickupOnly: true,  soldout: true  },
+    { name: '特4顆',        price: 200, pickupOnly: true,  soldout: false },
+    { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  },
+    { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: false },
+    { name: '家庭盒中16顆', price: 400, pickupOnly: false, soldout: false }
+  ];
+  var qtys = [0, 0, 0, 0, 0];
+  var deliveryType = '自取';
+  var lineName = '';
+  var lineUserId = '';
 
-// ── Telegram 設定
-const TELEGRAM_TOKEN   = '8667366687:AAE8B2mgPmiFUVo1VfOSoCJ5EjGwayaI7J0';
-const TELEGRAM_CHAT_ID = '7588402543';       // 管理員（你）
-const TELEGRAM_CHAT_ID_2 = '8991514370';    // 小幫手巧玲
-
-async function getAccessToken() {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const rawKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
-  const { createSign } = await import('crypto');
-  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
-  const now = Math.floor(Date.now() / 1000);
-  const claim = Buffer.from(JSON.stringify({
-    iss: email,
-    scope: 'https://www.googleapis.com/auth/spreadsheets',
-    aud: 'https://oauth2.googleapis.com/token',
-    exp: now + 3600,
-    iat: now
-  })).toString('base64url');
-  const sign = createSign('RSA-SHA256');
-  sign.update(`${header}.${claim}`);
-  const signature = sign.sign(rawKey, 'base64url');
-  const jwt = `${header}.${claim}.${signature}`;
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + jwt
-  });
-  const data = await res.json();
-  if (!data.access_token) throw new Error('取得 token 失敗：' + JSON.stringify(data));
-  return data.access_token;
-}
-
-async function readRange(token, range) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}`;
-  const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
-  const data = await res.json();
-  return data.values || [];
-}
-
-async function writeRange(token, range, values) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`;
-  await fetch(url, {
-    method: 'PUT',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ values })
-  });
-}
-
-async function appendRow(token, range, values) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&includeValuesInResponse=true`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ values })
-  });
-  return await res.json();
-}
-
-async function colorRows(token, sheetId, startRow, endRow, color) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}:batchUpdate`;
-  await fetch(url, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      requests: [{
-        repeatCell: {
-          range: { sheetId, startRowIndex: startRow, endRowIndex: endRow },
-          cell: { userEnteredFormat: { backgroundColor: color } },
-          fields: 'userEnteredFormat.backgroundColor'
-        }
-      }]
-    })
-  });
-}
-
-async function generateOrderId(token, deliveryType) {
-  const now = new Date();
-  const yy = String(now.getFullYear()).slice(2);
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const dateStr = yy + mm + dd;
-  const prefix = deliveryType === '宅配' ? 'D' : 'S';
-  const todayPrefix = prefix + dateStr;
-
-  const rows = await readRange(token, '訂單總表!A:A');
-  let maxSeq = 0;
-  for (const r of rows) {
-    if (!r[0] || !r[0].startsWith(todayPrefix)) continue;
-    const parts = r[0].split('-');
-    const seq = parseInt(parts[1], 10);
-    if (!isNaN(seq) && seq > maxSeq) maxSeq = seq;
+  function syncUI(idx) {
+    var el = document.getElementById('qty-' + idx);
+    el.value = qtys[idx];
+    var card = document.getElementById('spec-card-' + idx);
+    if (SPECS[idx].soldout) return;
+    var classes = ['spec-card'];
+    if (SPECS[idx].pickupOnly) classes.push('pickup-only');
+    if (qtys[idx] > 0) classes.push('has-qty');
+    card.className = classes.join(' ');
   }
-  const seq = String(maxSeq + 1).padStart(3, '0');
-  return `${todayPrefix}-${seq}`;
-}
 
-// ── 發送 Telegram 通知（支援指定 chat_id）
-async function sendTelegram(message, chatId) {
-  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId || TELEGRAM_CHAT_ID,
-      text: message
-    })
-  });
-}
+  function stepQty(idx, delta) {
+    if (SPECS[idx].soldout) return;
+    qtys[idx] = Math.max(0, qtys[idx] + delta);
+    syncUI(idx);
+    document.getElementById('empty-warning').style.display = 'none';
+    updatePriceDisplay();
+  }
 
-// ── 推播給顧客（LINE）— 已暫停，月免費額度已用完
-// async function sendLineToCustomer(userId, message) {
-//   if (!userId) return;
-//   await fetch('https://api.line.me/v2/bot/message/push', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + LINE_TOKEN },
-//     body: JSON.stringify({ to: userId, messages: [{ type: 'text', text: message }] })
-//   });
-// }
+  function inputQty(idx, val) {
+    if (SPECS[idx].soldout) return;
+    var n = parseInt(val, 10);
+    qtys[idx] = (isNaN(n) || n < 0) ? 0 : n;
+    var card = document.getElementById('spec-card-' + idx);
+    var classes = ['spec-card'];
+    if (SPECS[idx].pickupOnly) classes.push('pickup-only');
+    if (qtys[idx] > 0) classes.push('has-qty');
+    card.className = classes.join(' ');
+    document.getElementById('empty-warning').style.display = 'none';
+    updatePriceDisplay();
+  }
 
-const ORDER_COLORS = [
-  { red: 1,    green: 0.85, blue: 0.85 },
-  { red: 0.82, green: 0.9,  blue: 1    },
-  { red: 0.82, green: 0.95, blue: 0.82 },
-  { red: 1,    green: 0.95, blue: 0.75 },
-  { red: 0.9,  green: 0.85, blue: 1    }
-];
+  async function init() {
+    try {
+      if (typeof liff === 'undefined') {
+        console.warn('LIFF SDK 未載入，以一般瀏覽器模式運行');
+      } else {
+        await liff.init({ liffId: LIFF_ID });
+        if (liff.isLoggedIn()) {
+          var profile = await liff.getProfile();
+          lineName   = profile.displayName;
+          lineUserId = profile.userId;
+        } else {
+          liff.login();
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('LIFF init failed:', e);
+    }
+    updateSpecVisibility();
+    updatePriceDisplay();
+  }
 
-const specs = [
-  { key: 'spec0', name: '特2顆',        unit: 2,  price: 150 },
-  { key: 'spec1', name: '特4顆',        unit: 4,  price: 200 },
-  { key: 'spec2', name: '禮盒大6顆',    unit: 6,  price: 500 },
-  { key: 'spec3', name: '禮盒大8顆',    unit: 8,  price: 450 },
-  { key: 'spec4', name: '家庭盒中16顆', unit: 16, price: 400 }
-];
+  function setDelivery(type) {
+    for (var j = 0; j < 5; j++) {
+      qtys[j] = 0;
+      syncUI(j);
+    }
+    deliveryType = type;
+    document.getElementById('btn-pickup').className   = 'delivery-btn' + (type === '自取' ? ' active' : '');
+    document.getElementById('btn-delivery').className = 'delivery-btn' + (type === '宅配' ? ' active' : '');
+    document.getElementById('address-section').style.display      = type === '宅配' ? 'block' : 'none';
+    document.getElementById('pickup-info-section').style.display   = type === '自取' ? 'block' : 'none';
+    document.getElementById('delivery-info-section').style.display = type === '宅配' ? 'block' : 'none';
+    updateSpecVisibility();
+    updatePriceDisplay();
+  }
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  var PICKUP_ONLY_IDS = [0, 1];
+  function updateSpecVisibility() {
+    var isPickup = deliveryType === '自取';
+    PICKUP_ONLY_IDS.forEach(function(idx) {
+      document.getElementById('spec-card-' + idx).style.display = isPickup ? 'block' : 'none';
+    });
+    if (!isPickup) {
+      PICKUP_ONLY_IDS.forEach(function(idx) {
+        qtys[idx] = 0;
+        syncUI(idx);
+        document.getElementById('spec-card-' + idx).style.display = 'none';
+      });
+    }
+  }
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  function calcShipping() {
+    if (deliveryType !== '宅配') return 0;
+    var boxes = qtys[2] + qtys[3] + qtys[4];
+    if (boxes === 0) return 0;
+    return Math.ceil(boxes / 2) * SHIPPING_PER_BOX;
+  }
 
-  try {
-    const token = await getAccessToken();
-    const action = req.query.action;
+  function updatePriceDisplay() {
+    var html = '';
+    var subtotal = 0;
+    for (var i = 0; i < SPECS.length; i++) {
+      if (SPECS[i].soldout) continue;
+      if (qtys[i] <= 0) continue;
+      var amount = qtys[i] * SPECS[i].price;
+      subtotal += amount;
+      html += '<div class="price-row"><span>' + SPECS[i].name + ' x ' + qtys[i] + '</span><span>NT$ ' + amount + '</span></div>';
+    }
+    var shipping = calcShipping();
+    if (shipping > 0) {
+      html += '<div class="price-row"><span>黑貓冷藏宅配運費</span><span>NT$ ' + shipping + '</span></div>';
+    }
+    var total = subtotal + shipping;
+    html += '<div class="price-total"><span>總計金額</span><span>NT$ ' + total + '</span></div>';
+    document.getElementById('price-display').innerHTML = html;
+  }
 
-    const stockRow = await readRange(token, '庫存控制!A2:C2');
-    const totalStock  = Number(stockRow[0]?.[0]) || 0;
-    const soldStock   = Number(stockRow[0]?.[1]) || 0;
-    const remainStock = Number(stockRow[0]?.[2]) || 0;
+  var BANK_INFO = {
+    name: '渣打銀行',
+    code: '520',
+    account: '02020000492573'
+  };
 
-    if (action === 'debug') {
-      return res.json({ totalStock, soldStock, remainStock });
+  function showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address) {
+    document.getElementById('main-screen').style.display = 'none';
+    var screen = document.getElementById('success-screen');
+    screen.style.display = 'block';
+    var locationHtml = deliveryType === '自取'
+      ? '<div class="order-row"><span class="label">自取地點</span><span class="value">' + PICKUP_ADDRESS + '</span></div>'
+      : '<div class="order-row"><span class="label">宅配地址</span><span class="value">' + address + '</span></div>';
+    var shippingHtml = shipping > 0
+      ? '<div class="order-row"><span class="label">冷藏運費</span><span class="value">NT$ ' + shipping + '</span></div>'
+      : '';
+
+    // 付款方式與匯款資訊（自取／宅配內容不同）
+    var pickupPaymentHtml = deliveryType === '自取'
+      ? '<div class="success-bank-info">' +
+        '💰 <b>付款方式（擇一）</b><br>' +
+        '&nbsp;&nbsp;✅ 現場取貨時付款<br>' +
+        '&nbsp;&nbsp;✅ 先行轉帳，憑轉帳紀錄取貨<br>' +
+        '🏦 <b>匯款資訊：</b>渣打銀行（520）<br>' +
+        '&nbsp;&nbsp;帳號：<b style="color:#444; letter-spacing:1px;">0202-000-049-2573</b><br>' +
+        '&nbsp;&nbsp;轉帳後請通知 LINE 官方告知後五碼' +
+        '</div>'
+      : '<div class="success-bank-info" style="border-color:#B8DAFF; background:#F0F7FF;">' +
+        '🏦 <b style="color:#4A90D9;">匯款資訊：</b>渣打銀行（520）<br>' +
+        '&nbsp;&nbsp;帳號：<b style="color:#444; letter-spacing:1px;">0202-000-049-2573</b><br>' +
+        '⚠️ 請於訂購後 48 小時內完成匯款<br>' +
+        '&nbsp;&nbsp;匯款後請通知 LINE 官方告知後五碼，將依匯款順序出貨' +
+        '</div>';
+
+    document.getElementById('success-summary').innerHTML =
+      '<h3>🧾 訂單明細</h3>' +
+      '<div class="order-row"><span class="label">訂單編號</span><span class="value">' + orderId + '</span></div>' +
+      '<div class="order-row"><span class="label">訂購人</span><span class="value">' + name + '</span></div>' +
+      '<div class="order-row"><span class="label">取貨方式</span><span class="value">' + deliveryType + '</span></div>' +
+      locationHtml +
+      '<div class="order-row"><span class="label">訂購內容</span><span class="value">' + specSummary.replace(/、/g, '<br>') + '</span></div>' +
+      shippingHtml +
+      '<div class="order-total-row"><span>應付總金額</span><span class="value">NT$ ' + totalAmount + '</span></div>' +
+      pickupPaymentHtml;
+  }
+
+  async function submitOrder() {
+    var name    = document.getElementById('name').value.trim();
+    var phone   = document.getElementById('phone').value.trim();
+    var address = document.getElementById('address').value.trim();
+    var note    = document.getElementById('note').value.trim();
+
+    for (var j = 0; j < 5; j++) {
+      if (SPECS[j].soldout) { qtys[j] = 0; continue; }
+      var v = parseInt(document.getElementById('qty-' + j).value, 10);
+      qtys[j] = (isNaN(v) || v < 0) ? 0 : v;
     }
 
-    if (action === 'order') {
-      const { lineName, recipientName, phone, deliveryType, amount, address, note } = req.query;
-      const actualName = recipientName || lineName;
-      const amt = parseInt(amount) || 0;
-      const timestamp = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
-      const orderId = await generateOrderId(token, deliveryType);
-
-      let totalUsed = 0;
-      let specSummary = [];
-      let orderItems = [];
-
-      for (const item of specs) {
-        const qty = parseInt(req.query[item.key]) || 0;
-        if (qty <= 0) continue;
-        totalUsed += qty * item.unit;
-        specSummary.push(`${item.name} x ${qty}`);
-        orderItems.push({ item, qty, itemAmount: qty * item.price });
-      }
-
-      const summaryText = specSummary.join('、');
-
-      if (totalUsed > remainStock) {
-        return res.status(400).json({ status: 'error', message: '庫存不足' });
-      }
-
-      const rows = await readRange(token, '訂單總表!A:A');
-      const uniqueOrders = [...new Set(rows.slice(1).map(r => r[0]).filter(Boolean))];
-      const color = ORDER_COLORS[uniqueOrders.length % ORDER_COLORS.length];
-
-      // 電話加單引號，讓 Sheets 保留開頭的 0
-      const phoneForSheet = "'" + phone;
-
-      let firstRowIndex = null;
-      for (const row of orderItems) {
-        const result = await appendRow(token, '訂單總表!A:N', [[
-          orderId, timestamp, lineName, actualName, phoneForSheet,
-          row.item.name, deliveryType, row.qty, row.itemAmount,
-          address || '自取', note || '',
-          deliveryType === '宅配' ? '待匯款' : '貨到付款',
-          '待出貨', summaryText
-        ]]);
-        if (firstRowIndex === null) {
-          const match = result.updates.updatedRange.match(/A(\d+):/);
-          if (match) firstRowIndex = Number(match[1]) - 1;
-        }
-      }
-
-      await colorRows(token, 0, firstRowIndex, firstRowIndex + orderItems.length, color);
-
-      const newSold   = soldStock + totalUsed;
-      const newRemain = totalStock - newSold;
-      await writeRange(token, '庫存控制!B2:C2', [[newSold, newRemain]]);
-
-      // ── 運費計算
-      let shipping = 0;
-      if (deliveryType === '宅配') {
-        const totalBoxes = specs.reduce((sum, item) => sum + (parseInt(req.query[item.key]) || 0), 0);
-        shipping = Math.ceil(totalBoxes / 2) * 290;
-      }
-
-      const productAmount = amt - shipping;
-      const emoji = deliveryType === '宅配' ? '❄️' : '🏪';
-
-      // ── 管理員通知訊息
-      const adminMsg =
-        '🍑 新訂單！\n' +
-        '訂單編號：' + orderId + '\n' +
-        'LINE帳號：' + lineName + '\n' +
-        '收件人：' + actualName + '\n' +
-        '電話：' + phone + '\n' +
-        '取貨方式：' + emoji + ' ' + deliveryType + '\n' +
-        '規格：' + summaryText + '\n' +
-        '使用顆數：' + totalUsed + '顆\n' +
-        '商品金額：NT$ ' + productAmount + '\n' +
-        (deliveryType === '宅配' ? '運費：NT$ ' + shipping + '\n' : '') +
-        '總金額：NT$ ' + amt + '\n' +
-        (deliveryType === '宅配' ? '地址：' + address + '\n' : '') +
-        (note ? '備註：' + note + '\n' : '') +
-        '付款：' + (deliveryType === '宅配' ? '⏳ 等待匯款' : '貨到付款');
-
-      // ── 發送 Telegram 通知給管理員和小幫手
-      await sendTelegram(adminMsg);                        // 管理員
-      await sendTelegram(adminMsg, TELEGRAM_CHAT_ID_2);   // 小幫手巧玲
-
-      // ── 顧客通知（LINE）— 已暫停，月免費額度已用完
-      // await sendLineToCustomer(req.query.lineUserId || '', customerMsg);
-
-      return res.json({ status: 'success', orderId, totalUsed, remainStock: newRemain });
+    if (deliveryType === '宅配') {
+      qtys[0] = 0;
+      qtys[1] = 0;
     }
 
-    return res.json({ totalStock, soldStock, remainStock, specs });
+    var totalBoxes = qtys.reduce(function(a, b) { return a + b; }, 0);
+    if (totalBoxes === 0) {
+      document.getElementById('empty-warning').style.display = 'block';
+      return;
+    }
+    if (!name || !phone) { alert('請填寫姓名和電話'); return; }
 
-  } catch (err) {
-    return res.status(500).json({ status: 'error', message: err.message });
+    var cleanPhone = phone.replace(/[\s\-]/g, '');
+    if (!/^09\d{8}$/.test(cleanPhone)) {
+      alert('手機號碼格式不正確，請填寫 09 開頭的 10 碼號碼');
+      return;
+    }
+    phone = cleanPhone;
+
+    if (deliveryType === '宅配' && !address) { alert('請填寫宅配地址'); return; }
+
+    var shipping = calcShipping();
+    var subtotal = 0;
+    for (var i = 0; i < SPECS.length; i++) {
+      if (SPECS[i].soldout) continue;
+      subtotal += qtys[i] * SPECS[i].price;
+    }
+    var totalAmount = subtotal + shipping;
+
+    var specSummary = SPECS.map(function(s, i) {
+      if (s.soldout) return null;
+      return qtys[i] > 0 ? s.name + ' x' + qtys[i] : null;
+    }).filter(Boolean).join('、');
+
+    var btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = '訂單處理中...';
+
+    try {
+      var params = new URLSearchParams({
+        action: 'order',
+        lineName: lineName || name,
+        recipientName: name,
+        lineUserId: lineUserId || '',
+        phone: phone,
+        deliveryType: deliveryType,
+        spec0: String(qtys[0]),
+        spec1: String(qtys[1]),
+        spec2: String(qtys[2]),
+        spec3: String(qtys[3]),
+        spec4: String(qtys[4]),
+        specSummary: specSummary,
+        amount: String(totalAmount),
+        address: address || '自取（' + PICKUP_ADDRESS + '）',
+        note: note || ''
+      });
+      var res    = await fetch(API_URL + '?' + params.toString());
+      var result = await res.json();
+      if (result.status === 'success') {
+        var orderId = result.orderId;
+        showSuccessScreen(orderId, name, specSummary, totalAmount, shipping, address);
+      } else {
+        throw new Error('API returned non-success status');
+      }
+    } catch (e) {
+      console.error('Submit error:', e);
+      var msg = e.message && e.message.includes('Failed to fetch')
+        ? '網路連線失敗，請確認網路後再試'
+        : '送出失敗，請稍後再試';
+      alert(msg);
+      btn.disabled = false;
+      btn.textContent = '確認送出訂單';
+    }
   }
-}
+
+  init();
+</script>
+</body>
+</html>
