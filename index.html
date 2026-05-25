@@ -59,6 +59,9 @@
       color: #fff; background: #AAAAAA; border-radius: 6px;
       padding: 2px 8px; margin-left: 8px; vertical-align: middle; letter-spacing: 1px;
     }
+    .pause-note {
+      font-size: 11px; color: #999; margin-top: 4px;
+    }
     .qty-control.soldout-ctrl { opacity: 0.4; }
     .qty-input.soldout-input { background: #EEE; color: #AAA; border-color: #DDD; }
     .qty-btn.soldout-btn { background: #EEE; color: #BBB; box-shadow: none; cursor: not-allowed; }
@@ -174,12 +177,14 @@
     </div>
     <div class="card">
       <h2>挑選規格</h2>
+
+      <!-- 特2顆：暫停接單 -->
       <div class="spec-card soldout pickup-only" id="spec-card-0">
         <div class="spec-header">
           <div>
             <div class="spec-name">
               &#x1F351; 特2顆<span class="pickup-tag">自取限定</span>
-              <span class="soldout-badge">已完售</span>
+              <span class="soldout-badge">暫停接單</span>
             </div>
             <div class="spec-price" style="color:#BBB;">NT$ 150 / 盒</div>
           </div>
@@ -190,25 +195,33 @@
           </div>
         </div>
       </div>
-      <div class="spec-card pickup-only" id="spec-card-1">
+
+      <!-- 特4顆：暫停接單 -->
+      <div class="spec-card soldout pickup-only" id="spec-card-1">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F351; 特4顆<span class="pickup-tag">自取限定</span></div>
-            <div class="spec-price">NT$ 200 / 盒</div>
+            <div class="spec-name">
+              &#x1F351; 特4顆<span class="pickup-tag">自取限定</span>
+              <span class="soldout-badge">暫停接單</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 200 / 盒</div>
+            <div class="pause-note">暫停接單，後續看情況開放</div>
           </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(1,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-1" value="0" min="0" oninput="inputQty(1,this.value)">
-            <button class="qty-btn" onclick="stepQty(1,1)">+</button>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-1" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
           </div>
         </div>
       </div>
+
+      <!-- 禮盒大6顆：暫停接單 -->
       <div class="spec-card soldout" id="spec-card-2">
         <div class="spec-header">
           <div>
             <div class="spec-name">
               &#x1F381; 禮盒大6顆
-              <span class="soldout-badge">已完售</span>
+              <span class="soldout-badge">暫停接單</span>
             </div>
             <div class="spec-price" style="color:#BBB;">NT$ 500 / 盒</div>
           </div>
@@ -219,19 +232,27 @@
           </div>
         </div>
       </div>
-      <div class="spec-card" id="spec-card-3">
+
+      <!-- 禮盒大8顆：暫停接單 -->
+      <div class="spec-card soldout" id="spec-card-3">
         <div class="spec-header">
           <div>
-            <div class="spec-name">&#x1F381; 禮盒大8顆</div>
-            <div class="spec-price">NT$ 450 / 盒</div>
+            <div class="spec-name">
+              &#x1F381; 禮盒大8顆
+              <span class="soldout-badge">暫停接單</span>
+            </div>
+            <div class="spec-price" style="color:#BBB;">NT$ 450 / 盒</div>
+            <div class="pause-note">暫停接單，後續看情況開放</div>
           </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="stepQty(3,-1)">&#x2212;</button>
-            <input class="qty-input" type="number" id="qty-3" value="0" min="0" oninput="inputQty(3,this.value)">
-            <button class="qty-btn" onclick="stepQty(3,1)">+</button>
+          <div class="qty-control soldout-ctrl">
+            <button class="qty-btn soldout-btn" disabled>&#x2212;</button>
+            <input class="qty-input soldout-input" type="number" id="qty-3" value="0" min="0" disabled readonly>
+            <button class="qty-btn soldout-btn" disabled>+</button>
           </div>
         </div>
       </div>
+
+      <!-- 家庭盒中16顆：可訂購 -->
       <div class="spec-card" id="spec-card-4">
         <div class="spec-header">
           <div>
@@ -245,6 +266,7 @@
           </div>
         </div>
       </div>
+
       <p id="empty-warning" style="color:#ff6b6b;font-size:13px;text-align:center;display:none;">
         別忘了選購好吃的水蜜桃喔！
       </p>
@@ -312,9 +334,9 @@
   var PICKUP_ADDRESS = '苗栗縣公館鄉館東村和東街46號（每日 09:00–17:00）';
   var SPECS = [
     { name: '特2顆',        price: 150, pickupOnly: true,  soldout: true  },
-    { name: '特4顆',        price: 200, pickupOnly: true,  soldout: false },
+    { name: '特4顆',        price: 200, pickupOnly: true,  soldout: true  },
     { name: '禮盒大6顆',    price: 500, pickupOnly: false, soldout: true  },
-    { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: false },
+    { name: '禮盒大8顆',    price: 450, pickupOnly: false, soldout: true  },
     { name: '家庭盒中16顆', price: 400, pickupOnly: false, soldout: false }
   ];
   var qtys = [0, 0, 0, 0, 0];
@@ -448,8 +470,6 @@
     var shippingHtml = shipping > 0
       ? '<div class="order-row"><span class="label">冷藏運費</span><span class="value">NT$ ' + shipping + '</span></div>'
       : '';
-
-    // 付款方式與匯款資訊（自取／宅配內容不同）
     var pickupPaymentHtml = deliveryType === '自取'
       ? '<div class="success-bank-info">' +
         '💰 <b>付款方式（擇一）</b><br>' +
@@ -465,7 +485,6 @@
         '⚠️ 請於訂購後 48 小時內完成匯款<br>' +
         '&nbsp;&nbsp;匯款後請通知 LINE 官方告知後五碼，將依匯款順序出貨' +
         '</div>';
-
     document.getElementById('success-summary').innerHTML =
       '<h3>🧾 訂單明細</h3>' +
       '<div class="order-row"><span class="label">訂單編號</span><span class="value">' + orderId + '</span></div>' +
