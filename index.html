@@ -831,9 +831,10 @@ function renderStats() {
     const map = isPend ? pendMap : doneMap;
     (order.items||[]).forEach(it => {
       const k = it.product || '未知';
-      if (!map[k]) map[k] = { boxes: 0, peaches: 0 };
+      if (!map[k]) map[k] = { boxes: 0, peaches: 0, amount: 0 };
       map[k].boxes   += it.qty;
       map[k].peaches += it.qty * (UNIT_MAP[k] || 0);
+      map[k].amount  += it.amount || 0;
     });
   });
 
@@ -841,16 +842,18 @@ function renderStats() {
   const allProds = [...new Set([...Object.keys(pendMap), ...Object.keys(doneMap)])];
   allProds.sort();
 
-  let totalPendBoxes = 0, totalPendPeaches = 0;
-  let totalDoneBoxes = 0, totalDonePeaches = 0;
+  let totalPendBoxes = 0, totalPendPeaches = 0, totalPendAmount = 0;
+  let totalDoneBoxes = 0, totalDonePeaches = 0, totalDoneAmount = 0;
 
   const prodRows = allProds.map(name => {
-    const p = pendMap[name] || { boxes: 0, peaches: 0 };
-    const d = doneMap[name] || { boxes: 0, peaches: 0 };
+    const p = pendMap[name] || { boxes: 0, peaches: 0, amount: 0 };
+    const d = doneMap[name] || { boxes: 0, peaches: 0, amount: 0 };
     totalPendBoxes   += p.boxes;
     totalPendPeaches += p.peaches;
+    totalPendAmount  += p.amount;
     totalDoneBoxes   += d.boxes;
     totalDonePeaches += d.peaches;
+    totalDoneAmount  += d.amount;
     return `<div class="prod-row">
       <div class="prod-name">${esc(name)}</div>
       <div class="prod-cell pend">${p.boxes}</div>
@@ -951,6 +954,12 @@ function renderStats() {
         <div class="prod-cell" style="color:#86efac">${totalDoneBoxes}</div>
         <div class="prod-cell" style="color:#86efac">${totalDonePeaches}</div>
         <div class="prod-cell" style="color:#93c5fd">${totalPendBoxes + totalDoneBoxes}</div>
+      </div>
+      <div class="prod-row" style="background:#f0fdf4;border-top:2px solid var(--border)">
+        <div class="prod-name" style="font-size:34px;color:var(--text-sub)">💰 金額</div>
+        <div class="prod-cell pend" style="grid-column:span 2">NT$ ${totalPendAmount.toLocaleString()}</div>
+        <div class="prod-cell done" style="grid-column:span 2">NT$ ${totalDoneAmount.toLocaleString()}</div>
+        <div class="prod-cell total">NT$ ${(totalPendAmount+totalDoneAmount).toLocaleString()}</div>
       </div>
     </div>
 
